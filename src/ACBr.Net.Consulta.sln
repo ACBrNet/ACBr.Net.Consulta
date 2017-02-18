@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACBr.Net.Consulta", "ACBr.Net.Consulta\ACBr.Net.Consulta.csproj", "{138B3DB9-7CFD-4089-AEFF-E66B7B4A76F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACBr.Net.Consulta.Demo", "ACBr.Net.Consulta.Demo\ACBr.Net.Consulta.Demo.csproj", "{8580A59B-944A-4743-9888-762348F1BF74}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{138B3DB9-7CFD-4089-AEFF-E66B7B4A76F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{138B3DB9-7CFD-4089-AEFF-E66B7B4A76F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{138B3DB9-7CFD-4089-AEFF-E66B7B4A76F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{138B3DB9-7CFD-4089-AEFF-E66B7B4A76F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8580A59B-944A-4743-9888-762348F1BF74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8580A59B-944A-4743-9888-762348F1BF74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8580A59B-944A-4743-9888-762348F1BF74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8580A59B-944A-4743-9888-762348F1BF74}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
