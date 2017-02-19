@@ -12,7 +12,7 @@
 		<description>Biblioteca para consulta de CNPJ, CPF e Dados do IBGE</description>
 		<copyright>Copyright © Grupo ACBr.Net 2014 - 2017</copyright>
 		<language>pt-BR</language>
-		<tags>ACBr ACBr.Net Automação Comercial</tags>
+		<tags>ACBr ACBr.Net Automação Comercial IBGE CNPJ CPF</tags>
 		<dependencies>
 			<dependency id="ACBr.Net.Core" version="1.0.1.6" />
 		</dependencies>
