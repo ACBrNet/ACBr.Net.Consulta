@@ -209,8 +209,8 @@ namespace ACBr.Net.Consulta
 			try
 			{
 				var retornoRfb = new List<string>();
-				retornoRfb.AddText(ConsultaHelpers.StripHtml(retorno));
-				ConsultaHelpers.RemoveEmptyLines(retornoRfb);
+				retornoRfb.AddText(retorno.StripHtml());
+				retornoRfb.RemoveEmptyLines();
 
 				CNPJ = LerCampo(retornoRfb, "NÚMERO DE INSCRIÇÃO");
 				if (!CNPJ.IsEmpty()) TipoEmpresa = LerCampo(retornoRfb, CNPJ);
@@ -238,12 +238,12 @@ namespace ACBr.Net.Consulta
 
 				var listCNAE2 = new List<string>();
 				var aux = LerCampo(retornoRfb, "CÓDIGO E DESCRIÇÃO DAS ATIVIDADES ECONÔMICAS SECUNDÁRIAS");
-				if (!aux.IsEmpty()) listCNAE2.Add(ConsultaHelpers.RemoveDoubleSpaces(aux));
+				if (!aux.IsEmpty()) listCNAE2.Add(aux.RemoveDoubleSpaces());
 
 				do
 				{
 					aux = LerCampo(retornoRfb, aux);
-					if (!aux.IsEmpty()) listCNAE2.Add(ConsultaHelpers.RemoveDoubleSpaces(aux));
+					if (!aux.IsEmpty()) listCNAE2.Add(aux.RemoveDoubleSpaces());
 				} while (!aux.IsEmpty());
 
 				CNAE2 = listCNAE2.ToArray();

@@ -117,8 +117,8 @@ namespace ACBr.Net.Consulta
 
 			try
 			{
-				retornoRfb.AddText(ConsultaHelpers.StripHtml(retorno));
-				ConsultaHelpers.RemoveEmptyLines(retornoRfb);
+				retornoRfb.AddText(retorno.StripHtml());
+				retornoRfb.RemoveEmptyLines();
 
 				CPF = LerCampo(retornoRfb, "No do CPF:");
 				Nome = LerCampo(retornoRfb, "Nome da Pessoa Física:");

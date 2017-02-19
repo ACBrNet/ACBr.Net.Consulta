@@ -29,10 +29,9 @@
 		private void InitializeComponent()
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
-			this.procurarCnpjButton = new System.Windows.Forms.Button();
-			this.captchaCnpjPictureBox = new System.Windows.Forms.PictureBox();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.captchaCnpjLinkLabel = new System.Windows.Forms.LinkLabel();
+			this.captchaCnpjPictureBox = new System.Windows.Forms.PictureBox();
 			this.cnpjMaskedTextBox = new System.Windows.Forms.MaskedTextBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
@@ -68,9 +67,25 @@
 			this.label4 = new System.Windows.Forms.Label();
 			this.tipoEmpresaTextBox = new System.Windows.Forms.TextBox();
 			this.label3 = new System.Windows.Forms.Label();
-			this.tabControl1 = new System.Windows.Forms.TabControl();
+			this.consultaTabControl = new System.Windows.Forms.TabControl();
 			this.cnpjTabPage = new System.Windows.Forms.TabPage();
+			this.procurarCnpjButton = new System.Windows.Forms.Button();
 			this.cpfTabPage = new System.Windows.Forms.TabPage();
+			this.dataNascimentoMaskedTextBox = new System.Windows.Forms.MaskedTextBox();
+			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.codControleTextBox = new System.Windows.Forms.TextBox();
+			this.label26 = new System.Windows.Forms.Label();
+			this.comprovanteTextBox = new System.Windows.Forms.TextBox();
+			this.label25 = new System.Windows.Forms.Label();
+			this.digitoTextBox = new System.Windows.Forms.TextBox();
+			this.label24 = new System.Windows.Forms.Label();
+			this.dataInscricaoTextBox = new System.Windows.Forms.TextBox();
+			this.label23 = new System.Windows.Forms.Label();
+			this.situacaoCpfTextBox = new System.Windows.Forms.TextBox();
+			this.label22 = new System.Windows.Forms.Label();
+			this.nomeTextBox = new System.Windows.Forms.TextBox();
+			this.label21 = new System.Windows.Forms.Label();
+			this.label20 = new System.Windows.Forms.Label();
 			this.panel2 = new System.Windows.Forms.Panel();
 			this.captchaCpfLinkLabel = new System.Windows.Forms.LinkLabel();
 			this.captchCpfPictureBox = new System.Windows.Forms.PictureBox();
@@ -79,53 +94,35 @@
 			this.cpfMaskedTextBox = new System.Windows.Forms.MaskedTextBox();
 			this.label18 = new System.Windows.Forms.Label();
 			this.label19 = new System.Windows.Forms.Label();
-			this.label20 = new System.Windows.Forms.Label();
-			this.groupBox2 = new System.Windows.Forms.GroupBox();
-			this.nomeTextBox = new System.Windows.Forms.TextBox();
-			this.label21 = new System.Windows.Forms.Label();
-			this.situacaoCpfTextBox = new System.Windows.Forms.TextBox();
-			this.label22 = new System.Windows.Forms.Label();
-			this.dataInscricaoTextBox = new System.Windows.Forms.TextBox();
-			this.label23 = new System.Windows.Forms.Label();
-			this.digitoTextBox = new System.Windows.Forms.TextBox();
-			this.label24 = new System.Windows.Forms.Label();
-			this.comprovanteTextBox = new System.Windows.Forms.TextBox();
-			this.label25 = new System.Windows.Forms.Label();
-			this.codControleTextBox = new System.Windows.Forms.TextBox();
-			this.label26 = new System.Windows.Forms.Label();
-			this.dataNascimentoMaskedTextBox = new System.Windows.Forms.MaskedTextBox();
-			((System.ComponentModel.ISupportInitialize)(this.captchaCnpjPictureBox)).BeginInit();
+			this.ibgeTabPage = new System.Windows.Forms.TabPage();
+			this.groupBox5 = new System.Windows.Forms.GroupBox();
+			this.dataGridView1 = new System.Windows.Forms.DataGridView();
+			this.groupBox4 = new System.Windows.Forms.GroupBox();
+			this.procurarIbgeNomeButton = new System.Windows.Forms.Button();
+			this.label27 = new System.Windows.Forms.Label();
+			this.nomeIbgeTextBox = new System.Windows.Forms.TextBox();
+			this.groupBox3 = new System.Windows.Forms.GroupBox();
+			this.procurarIbgeCodigoButton = new System.Windows.Forms.Button();
+			this.codigoIbgeTextBox = new System.Windows.Forms.TextBox();
+			this.label28 = new System.Windows.Forms.Label();
+			this.acbrCnpj = new ACBr.Net.Consulta.ACBrConsultaCNPJ();
+			this.acbrCpf = new ACBr.Net.Consulta.ACBrConsultaCPF();
+			this.acbrIbge = new ACBr.Net.Consulta.ACBrIBGE();
 			this.panel1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.captchaCnpjPictureBox)).BeginInit();
 			this.groupBox1.SuspendLayout();
-			this.tabControl1.SuspendLayout();
+			this.consultaTabControl.SuspendLayout();
 			this.cnpjTabPage.SuspendLayout();
 			this.cpfTabPage.SuspendLayout();
+			this.groupBox2.SuspendLayout();
 			this.panel2.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.captchCpfPictureBox)).BeginInit();
-			this.groupBox2.SuspendLayout();
+			this.ibgeTabPage.SuspendLayout();
+			this.groupBox5.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+			this.groupBox4.SuspendLayout();
+			this.groupBox3.SuspendLayout();
 			this.SuspendLayout();
-			// 
-			// procurarCnpjButton
-			// 
-			this.procurarCnpjButton.Location = new System.Drawing.Point(543, 85);
-			this.procurarCnpjButton.Name = "procurarCnpjButton";
-			this.procurarCnpjButton.Size = new System.Drawing.Size(94, 38);
-			this.procurarCnpjButton.TabIndex = 0;
-			this.procurarCnpjButton.Text = "Procurar";
-			this.procurarCnpjButton.UseVisualStyleBackColor = true;
-			this.procurarCnpjButton.Click += new System.EventHandler(this.procurarCnpjButton_Click);
-			// 
-			// captchaCnpjPictureBox
-			// 
-			this.captchaCnpjPictureBox.BackColor = System.Drawing.Color.White;
-			this.captchaCnpjPictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.captchaCnpjPictureBox.Dock = System.Windows.Forms.DockStyle.Top;
-			this.captchaCnpjPictureBox.Location = new System.Drawing.Point(0, 0);
-			this.captchaCnpjPictureBox.Name = "captchaCnpjPictureBox";
-			this.captchaCnpjPictureBox.Size = new System.Drawing.Size(352, 85);
-			this.captchaCnpjPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-			this.captchaCnpjPictureBox.TabIndex = 1;
-			this.captchaCnpjPictureBox.TabStop = false;
 			// 
 			// panel1
 			// 
@@ -149,6 +146,18 @@
 			this.captchaCnpjLinkLabel.Text = "Atualizar Captcha";
 			this.captchaCnpjLinkLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			this.captchaCnpjLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.captchaCnpjLinkLabel_LinkClicked);
+			// 
+			// captchaCnpjPictureBox
+			// 
+			this.captchaCnpjPictureBox.BackColor = System.Drawing.Color.White;
+			this.captchaCnpjPictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.captchaCnpjPictureBox.Dock = System.Windows.Forms.DockStyle.Top;
+			this.captchaCnpjPictureBox.Location = new System.Drawing.Point(0, 0);
+			this.captchaCnpjPictureBox.Name = "captchaCnpjPictureBox";
+			this.captchaCnpjPictureBox.Size = new System.Drawing.Size(352, 85);
+			this.captchaCnpjPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+			this.captchaCnpjPictureBox.TabIndex = 1;
+			this.captchaCnpjPictureBox.TabStop = false;
 			// 
 			// cnpjMaskedTextBox
 			// 
@@ -494,16 +503,17 @@
 			this.label3.TabIndex = 0;
 			this.label3.Text = "Tipo Empresa";
 			// 
-			// tabControl1
+			// consultaTabControl
 			// 
-			this.tabControl1.Controls.Add(this.cnpjTabPage);
-			this.tabControl1.Controls.Add(this.cpfTabPage);
-			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tabControl1.Location = new System.Drawing.Point(0, 0);
-			this.tabControl1.Name = "tabControl1";
-			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.Size = new System.Drawing.Size(655, 537);
-			this.tabControl1.TabIndex = 8;
+			this.consultaTabControl.Controls.Add(this.cnpjTabPage);
+			this.consultaTabControl.Controls.Add(this.cpfTabPage);
+			this.consultaTabControl.Controls.Add(this.ibgeTabPage);
+			this.consultaTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.consultaTabControl.Location = new System.Drawing.Point(0, 0);
+			this.consultaTabControl.Name = "consultaTabControl";
+			this.consultaTabControl.SelectedIndex = 0;
+			this.consultaTabControl.Size = new System.Drawing.Size(655, 537);
+			this.consultaTabControl.TabIndex = 8;
 			// 
 			// cnpjTabPage
 			// 
@@ -521,6 +531,16 @@
 			this.cnpjTabPage.TabIndex = 0;
 			this.cnpjTabPage.Text = "CNPJ";
 			this.cnpjTabPage.UseVisualStyleBackColor = true;
+			// 
+			// procurarCnpjButton
+			// 
+			this.procurarCnpjButton.Location = new System.Drawing.Point(543, 85);
+			this.procurarCnpjButton.Name = "procurarCnpjButton";
+			this.procurarCnpjButton.Size = new System.Drawing.Size(94, 38);
+			this.procurarCnpjButton.TabIndex = 0;
+			this.procurarCnpjButton.Text = "Procurar";
+			this.procurarCnpjButton.UseVisualStyleBackColor = true;
+			this.procurarCnpjButton.Click += new System.EventHandler(this.procurarCnpjButton_Click);
 			// 
 			// cpfTabPage
 			// 
@@ -540,6 +560,153 @@
 			this.cpfTabPage.TabIndex = 1;
 			this.cpfTabPage.Text = "CPF";
 			this.cpfTabPage.UseVisualStyleBackColor = true;
+			// 
+			// dataNascimentoMaskedTextBox
+			// 
+			this.dataNascimentoMaskedTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.dataNascimentoMaskedTextBox.Location = new System.Drawing.Point(366, 82);
+			this.dataNascimentoMaskedTextBox.Mask = "00/00/0000";
+			this.dataNascimentoMaskedTextBox.Name = "dataNascimentoMaskedTextBox";
+			this.dataNascimentoMaskedTextBox.Size = new System.Drawing.Size(173, 38);
+			this.dataNascimentoMaskedTextBox.TabIndex = 3;
+			this.dataNascimentoMaskedTextBox.ValidatingType = typeof(System.DateTime);
+			// 
+			// groupBox2
+			// 
+			this.groupBox2.Controls.Add(this.codControleTextBox);
+			this.groupBox2.Controls.Add(this.label26);
+			this.groupBox2.Controls.Add(this.comprovanteTextBox);
+			this.groupBox2.Controls.Add(this.label25);
+			this.groupBox2.Controls.Add(this.digitoTextBox);
+			this.groupBox2.Controls.Add(this.label24);
+			this.groupBox2.Controls.Add(this.dataInscricaoTextBox);
+			this.groupBox2.Controls.Add(this.label23);
+			this.groupBox2.Controls.Add(this.situacaoCpfTextBox);
+			this.groupBox2.Controls.Add(this.label22);
+			this.groupBox2.Controls.Add(this.nomeTextBox);
+			this.groupBox2.Controls.Add(this.label21);
+			this.groupBox2.Location = new System.Drawing.Point(10, 183);
+			this.groupBox2.Name = "groupBox2";
+			this.groupBox2.Size = new System.Drawing.Size(631, 320);
+			this.groupBox2.TabIndex = 15;
+			this.groupBox2.TabStop = false;
+			// 
+			// codControleTextBox
+			// 
+			this.codControleTextBox.BackColor = System.Drawing.SystemColors.Info;
+			this.codControleTextBox.Location = new System.Drawing.Point(9, 110);
+			this.codControleTextBox.Name = "codControleTextBox";
+			this.codControleTextBox.ReadOnly = true;
+			this.codControleTextBox.Size = new System.Drawing.Size(616, 20);
+			this.codControleTextBox.TabIndex = 35;
+			// 
+			// label26
+			// 
+			this.label26.AutoSize = true;
+			this.label26.Location = new System.Drawing.Point(6, 94);
+			this.label26.Name = "label26";
+			this.label26.Size = new System.Drawing.Size(179, 13);
+			this.label26.TabIndex = 34;
+			this.label26.Text = "Código de controle do comprovante:";
+			// 
+			// comprovanteTextBox
+			// 
+			this.comprovanteTextBox.BackColor = System.Drawing.SystemColors.Info;
+			this.comprovanteTextBox.Location = new System.Drawing.Point(108, 71);
+			this.comprovanteTextBox.Name = "comprovanteTextBox";
+			this.comprovanteTextBox.ReadOnly = true;
+			this.comprovanteTextBox.Size = new System.Drawing.Size(320, 20);
+			this.comprovanteTextBox.TabIndex = 33;
+			// 
+			// label25
+			// 
+			this.label25.AutoSize = true;
+			this.label25.Location = new System.Drawing.Point(105, 55);
+			this.label25.Name = "label25";
+			this.label25.Size = new System.Drawing.Size(123, 13);
+			this.label25.TabIndex = 32;
+			this.label25.Text = "Comprovante emitido às:";
+			// 
+			// digitoTextBox
+			// 
+			this.digitoTextBox.BackColor = System.Drawing.SystemColors.Info;
+			this.digitoTextBox.Location = new System.Drawing.Point(9, 71);
+			this.digitoTextBox.Name = "digitoTextBox";
+			this.digitoTextBox.ReadOnly = true;
+			this.digitoTextBox.Size = new System.Drawing.Size(93, 20);
+			this.digitoTextBox.TabIndex = 31;
+			// 
+			// label24
+			// 
+			this.label24.AutoSize = true;
+			this.label24.Location = new System.Drawing.Point(6, 55);
+			this.label24.Name = "label24";
+			this.label24.Size = new System.Drawing.Size(87, 13);
+			this.label24.TabIndex = 30;
+			this.label24.Text = "Digito Verificador";
+			// 
+			// dataInscricaoTextBox
+			// 
+			this.dataInscricaoTextBox.BackColor = System.Drawing.SystemColors.Info;
+			this.dataInscricaoTextBox.Location = new System.Drawing.Point(434, 71);
+			this.dataInscricaoTextBox.Name = "dataInscricaoTextBox";
+			this.dataInscricaoTextBox.ReadOnly = true;
+			this.dataInscricaoTextBox.Size = new System.Drawing.Size(191, 20);
+			this.dataInscricaoTextBox.TabIndex = 29;
+			// 
+			// label23
+			// 
+			this.label23.AutoSize = true;
+			this.label23.Location = new System.Drawing.Point(431, 55);
+			this.label23.Name = "label23";
+			this.label23.Size = new System.Drawing.Size(86, 13);
+			this.label23.TabIndex = 28;
+			this.label23.Text = "Data da Incrição";
+			// 
+			// situacaoCpfTextBox
+			// 
+			this.situacaoCpfTextBox.BackColor = System.Drawing.SystemColors.Info;
+			this.situacaoCpfTextBox.Location = new System.Drawing.Point(434, 32);
+			this.situacaoCpfTextBox.Name = "situacaoCpfTextBox";
+			this.situacaoCpfTextBox.ReadOnly = true;
+			this.situacaoCpfTextBox.Size = new System.Drawing.Size(191, 20);
+			this.situacaoCpfTextBox.TabIndex = 27;
+			// 
+			// label22
+			// 
+			this.label22.AutoSize = true;
+			this.label22.Location = new System.Drawing.Point(431, 16);
+			this.label22.Name = "label22";
+			this.label22.Size = new System.Drawing.Size(96, 13);
+			this.label22.TabIndex = 26;
+			this.label22.Text = "Situação Cadastral";
+			// 
+			// nomeTextBox
+			// 
+			this.nomeTextBox.BackColor = System.Drawing.SystemColors.Info;
+			this.nomeTextBox.Location = new System.Drawing.Point(9, 32);
+			this.nomeTextBox.Name = "nomeTextBox";
+			this.nomeTextBox.ReadOnly = true;
+			this.nomeTextBox.Size = new System.Drawing.Size(419, 20);
+			this.nomeTextBox.TabIndex = 5;
+			// 
+			// label21
+			// 
+			this.label21.AutoSize = true;
+			this.label21.Location = new System.Drawing.Point(6, 16);
+			this.label21.Name = "label21";
+			this.label21.Size = new System.Drawing.Size(120, 13);
+			this.label21.TabIndex = 4;
+			this.label21.Text = "Nome da Pessoa Física";
+			// 
+			// label20
+			// 
+			this.label20.AutoSize = true;
+			this.label20.Location = new System.Drawing.Point(366, 66);
+			this.label20.Name = "label20";
+			this.label20.Size = new System.Drawing.Size(152, 13);
+			this.label20.TabIndex = 14;
+			this.label20.Text = "Digite o a Data de Nascimento";
 			// 
 			// panel2
 			// 
@@ -621,178 +788,150 @@
 			this.label19.TabIndex = 10;
 			this.label19.Text = "Digite o CPF";
 			// 
-			// label20
+			// ibgeTabPage
 			// 
-			this.label20.AutoSize = true;
-			this.label20.Location = new System.Drawing.Point(366, 66);
-			this.label20.Name = "label20";
-			this.label20.Size = new System.Drawing.Size(152, 13);
-			this.label20.TabIndex = 14;
-			this.label20.Text = "Digite o a Data de Nascimento";
+			this.ibgeTabPage.Controls.Add(this.groupBox5);
+			this.ibgeTabPage.Controls.Add(this.groupBox4);
+			this.ibgeTabPage.Controls.Add(this.groupBox3);
+			this.ibgeTabPage.Location = new System.Drawing.Point(4, 22);
+			this.ibgeTabPage.Name = "ibgeTabPage";
+			this.ibgeTabPage.Padding = new System.Windows.Forms.Padding(3);
+			this.ibgeTabPage.Size = new System.Drawing.Size(647, 511);
+			this.ibgeTabPage.TabIndex = 2;
+			this.ibgeTabPage.Text = "IBGE";
+			this.ibgeTabPage.UseVisualStyleBackColor = true;
 			// 
-			// groupBox2
+			// groupBox5
 			// 
-			this.groupBox2.Controls.Add(this.codControleTextBox);
-			this.groupBox2.Controls.Add(this.label26);
-			this.groupBox2.Controls.Add(this.comprovanteTextBox);
-			this.groupBox2.Controls.Add(this.label25);
-			this.groupBox2.Controls.Add(this.digitoTextBox);
-			this.groupBox2.Controls.Add(this.label24);
-			this.groupBox2.Controls.Add(this.dataInscricaoTextBox);
-			this.groupBox2.Controls.Add(this.label23);
-			this.groupBox2.Controls.Add(this.situacaoCpfTextBox);
-			this.groupBox2.Controls.Add(this.label22);
-			this.groupBox2.Controls.Add(this.nomeTextBox);
-			this.groupBox2.Controls.Add(this.label21);
-			this.groupBox2.Location = new System.Drawing.Point(10, 183);
-			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(631, 320);
-			this.groupBox2.TabIndex = 15;
-			this.groupBox2.TabStop = false;
+			this.groupBox5.Controls.Add(this.dataGridView1);
+			this.groupBox5.Location = new System.Drawing.Point(8, 103);
+			this.groupBox5.Name = "groupBox5";
+			this.groupBox5.Size = new System.Drawing.Size(631, 400);
+			this.groupBox5.TabIndex = 20;
+			this.groupBox5.TabStop = false;
+			this.groupBox5.Text = "Resultados";
 			// 
-			// nomeTextBox
+			// dataGridView1
 			// 
-			this.nomeTextBox.BackColor = System.Drawing.SystemColors.Info;
-			this.nomeTextBox.Location = new System.Drawing.Point(9, 32);
-			this.nomeTextBox.Name = "nomeTextBox";
-			this.nomeTextBox.ReadOnly = true;
-			this.nomeTextBox.Size = new System.Drawing.Size(419, 20);
-			this.nomeTextBox.TabIndex = 5;
+			this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.dataGridView1.Location = new System.Drawing.Point(3, 16);
+			this.dataGridView1.Name = "dataGridView1";
+			this.dataGridView1.Size = new System.Drawing.Size(625, 381);
+			this.dataGridView1.TabIndex = 0;
 			// 
-			// label21
+			// groupBox4
 			// 
-			this.label21.AutoSize = true;
-			this.label21.Location = new System.Drawing.Point(6, 16);
-			this.label21.Name = "label21";
-			this.label21.Size = new System.Drawing.Size(120, 13);
-			this.label21.TabIndex = 4;
-			this.label21.Text = "Nome da Pessoa Física";
+			this.groupBox4.Controls.Add(this.procurarIbgeNomeButton);
+			this.groupBox4.Controls.Add(this.label27);
+			this.groupBox4.Controls.Add(this.nomeIbgeTextBox);
+			this.groupBox4.Location = new System.Drawing.Point(185, 6);
+			this.groupBox4.Name = "groupBox4";
+			this.groupBox4.Size = new System.Drawing.Size(454, 91);
+			this.groupBox4.TabIndex = 19;
+			this.groupBox4.TabStop = false;
+			this.groupBox4.Text = "Por Nome";
 			// 
-			// situacaoCpfTextBox
+			// procurarIbgeNomeButton
 			// 
-			this.situacaoCpfTextBox.BackColor = System.Drawing.SystemColors.Info;
-			this.situacaoCpfTextBox.Location = new System.Drawing.Point(434, 32);
-			this.situacaoCpfTextBox.Name = "situacaoCpfTextBox";
-			this.situacaoCpfTextBox.ReadOnly = true;
-			this.situacaoCpfTextBox.Size = new System.Drawing.Size(191, 20);
-			this.situacaoCpfTextBox.TabIndex = 27;
+			this.procurarIbgeNomeButton.Location = new System.Drawing.Point(373, 62);
+			this.procurarIbgeNomeButton.Name = "procurarIbgeNomeButton";
+			this.procurarIbgeNomeButton.Size = new System.Drawing.Size(75, 23);
+			this.procurarIbgeNomeButton.TabIndex = 21;
+			this.procurarIbgeNomeButton.Text = "Procurar";
+			this.procurarIbgeNomeButton.UseVisualStyleBackColor = true;
+			this.procurarIbgeNomeButton.Click += new System.EventHandler(this.procurarIbgeNomeButton_Click);
 			// 
-			// label22
+			// label27
 			// 
-			this.label22.AutoSize = true;
-			this.label22.Location = new System.Drawing.Point(431, 16);
-			this.label22.Name = "label22";
-			this.label22.Size = new System.Drawing.Size(96, 13);
-			this.label22.TabIndex = 26;
-			this.label22.Text = "Situação Cadastral";
+			this.label27.AutoSize = true;
+			this.label27.Location = new System.Drawing.Point(6, 20);
+			this.label27.Name = "label27";
+			this.label27.Size = new System.Drawing.Size(134, 13);
+			this.label27.TabIndex = 13;
+			this.label27.Text = "Digite o nome do municipio";
 			// 
-			// dataInscricaoTextBox
+			// nomeIbgeTextBox
 			// 
-			this.dataInscricaoTextBox.BackColor = System.Drawing.SystemColors.Info;
-			this.dataInscricaoTextBox.Location = new System.Drawing.Point(434, 71);
-			this.dataInscricaoTextBox.Name = "dataInscricaoTextBox";
-			this.dataInscricaoTextBox.ReadOnly = true;
-			this.dataInscricaoTextBox.Size = new System.Drawing.Size(191, 20);
-			this.dataInscricaoTextBox.TabIndex = 29;
+			this.nomeIbgeTextBox.Location = new System.Drawing.Point(6, 36);
+			this.nomeIbgeTextBox.Name = "nomeIbgeTextBox";
+			this.nomeIbgeTextBox.Size = new System.Drawing.Size(442, 20);
+			this.nomeIbgeTextBox.TabIndex = 14;
 			// 
-			// label23
+			// groupBox3
 			// 
-			this.label23.AutoSize = true;
-			this.label23.Location = new System.Drawing.Point(431, 55);
-			this.label23.Name = "label23";
-			this.label23.Size = new System.Drawing.Size(86, 13);
-			this.label23.TabIndex = 28;
-			this.label23.Text = "Data da Incrição";
+			this.groupBox3.Controls.Add(this.procurarIbgeCodigoButton);
+			this.groupBox3.Controls.Add(this.codigoIbgeTextBox);
+			this.groupBox3.Controls.Add(this.label28);
+			this.groupBox3.Location = new System.Drawing.Point(8, 6);
+			this.groupBox3.Name = "groupBox3";
+			this.groupBox3.Size = new System.Drawing.Size(171, 91);
+			this.groupBox3.TabIndex = 18;
+			this.groupBox3.TabStop = false;
+			this.groupBox3.Text = "Por Código";
 			// 
-			// digitoTextBox
+			// procurarIbgeCodigoButton
 			// 
-			this.digitoTextBox.BackColor = System.Drawing.SystemColors.Info;
-			this.digitoTextBox.Location = new System.Drawing.Point(9, 71);
-			this.digitoTextBox.Name = "digitoTextBox";
-			this.digitoTextBox.ReadOnly = true;
-			this.digitoTextBox.Size = new System.Drawing.Size(93, 20);
-			this.digitoTextBox.TabIndex = 31;
+			this.procurarIbgeCodigoButton.Location = new System.Drawing.Point(90, 62);
+			this.procurarIbgeCodigoButton.Name = "procurarIbgeCodigoButton";
+			this.procurarIbgeCodigoButton.Size = new System.Drawing.Size(75, 23);
+			this.procurarIbgeCodigoButton.TabIndex = 20;
+			this.procurarIbgeCodigoButton.Text = "Procurar";
+			this.procurarIbgeCodigoButton.UseVisualStyleBackColor = true;
+			this.procurarIbgeCodigoButton.Click += new System.EventHandler(this.procurarIbgeCodigoButton_Click);
 			// 
-			// label24
+			// codigoIbgeTextBox
 			// 
-			this.label24.AutoSize = true;
-			this.label24.Location = new System.Drawing.Point(6, 55);
-			this.label24.Name = "label24";
-			this.label24.Size = new System.Drawing.Size(87, 13);
-			this.label24.TabIndex = 30;
-			this.label24.Text = "Digito Verificador";
+			this.codigoIbgeTextBox.Location = new System.Drawing.Point(6, 36);
+			this.codigoIbgeTextBox.Name = "codigoIbgeTextBox";
+			this.codigoIbgeTextBox.Size = new System.Drawing.Size(159, 20);
+			this.codigoIbgeTextBox.TabIndex = 16;
 			// 
-			// comprovanteTextBox
+			// label28
 			// 
-			this.comprovanteTextBox.BackColor = System.Drawing.SystemColors.Info;
-			this.comprovanteTextBox.Location = new System.Drawing.Point(108, 71);
-			this.comprovanteTextBox.Name = "comprovanteTextBox";
-			this.comprovanteTextBox.ReadOnly = true;
-			this.comprovanteTextBox.Size = new System.Drawing.Size(320, 20);
-			this.comprovanteTextBox.TabIndex = 33;
+			this.label28.AutoSize = true;
+			this.label28.Location = new System.Drawing.Point(3, 20);
+			this.label28.Name = "label28";
+			this.label28.Size = new System.Drawing.Size(140, 13);
+			this.label28.TabIndex = 15;
+			this.label28.Text = "Digite o código do municipio";
 			// 
-			// label25
+			// acbrIbge
 			// 
-			this.label25.AutoSize = true;
-			this.label25.Location = new System.Drawing.Point(105, 55);
-			this.label25.Name = "label25";
-			this.label25.Size = new System.Drawing.Size(123, 13);
-			this.label25.TabIndex = 32;
-			this.label25.Text = "Comprovante emitido às:";
-			// 
-			// codControleTextBox
-			// 
-			this.codControleTextBox.BackColor = System.Drawing.SystemColors.Info;
-			this.codControleTextBox.Location = new System.Drawing.Point(9, 110);
-			this.codControleTextBox.Name = "codControleTextBox";
-			this.codControleTextBox.ReadOnly = true;
-			this.codControleTextBox.Size = new System.Drawing.Size(616, 20);
-			this.codControleTextBox.TabIndex = 35;
-			// 
-			// label26
-			// 
-			this.label26.AutoSize = true;
-			this.label26.Location = new System.Drawing.Point(6, 94);
-			this.label26.Name = "label26";
-			this.label26.Size = new System.Drawing.Size(179, 13);
-			this.label26.TabIndex = 34;
-			this.label26.Text = "Código de controle do comprovante:";
-			// 
-			// dataNascimentoMaskedTextBox
-			// 
-			this.dataNascimentoMaskedTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.dataNascimentoMaskedTextBox.Location = new System.Drawing.Point(366, 82);
-			this.dataNascimentoMaskedTextBox.Mask = "00/00/0000";
-			this.dataNascimentoMaskedTextBox.Name = "dataNascimentoMaskedTextBox";
-			this.dataNascimentoMaskedTextBox.Size = new System.Drawing.Size(173, 38);
-			this.dataNascimentoMaskedTextBox.TabIndex = 3;
-			this.dataNascimentoMaskedTextBox.ValidatingType = typeof(System.DateTime);
+			this.acbrIbge.OnBuscaEfetuada += new System.EventHandler<System.EventArgs>(this.OnOnBuscaEfetuada);
 			// 
 			// FrmMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(655, 537);
-			this.Controls.Add(this.tabControl1);
+			this.Controls.Add(this.consultaTabControl);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "FrmMain";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "ACBr Consulta Demo";
 			this.Shown += new System.EventHandler(this.FrmMain_Shown);
-			((System.ComponentModel.ISupportInitialize)(this.captchaCnpjPictureBox)).EndInit();
 			this.panel1.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.captchaCnpjPictureBox)).EndInit();
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox1.PerformLayout();
-			this.tabControl1.ResumeLayout(false);
+			this.consultaTabControl.ResumeLayout(false);
 			this.cnpjTabPage.ResumeLayout(false);
 			this.cnpjTabPage.PerformLayout();
 			this.cpfTabPage.ResumeLayout(false);
 			this.cpfTabPage.PerformLayout();
-			this.panel2.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.captchCpfPictureBox)).EndInit();
 			this.groupBox2.ResumeLayout(false);
 			this.groupBox2.PerformLayout();
+			this.panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.captchCpfPictureBox)).EndInit();
+			this.ibgeTabPage.ResumeLayout(false);
+			this.groupBox5.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+			this.groupBox4.ResumeLayout(false);
+			this.groupBox4.PerformLayout();
+			this.groupBox3.ResumeLayout(false);
+			this.groupBox3.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -838,7 +977,7 @@
 		private System.Windows.Forms.Label label17;
 		private System.Windows.Forms.TextBox naturezaJuridicaTextBox;
 		private System.Windows.Forms.Label label16;
-		private System.Windows.Forms.TabControl tabControl1;
+		private System.Windows.Forms.TabControl consultaTabControl;
 		private System.Windows.Forms.TabPage cnpjTabPage;
 		private System.Windows.Forms.TabPage cpfTabPage;
 		private System.Windows.Forms.Panel panel2;
@@ -864,6 +1003,20 @@
 		private System.Windows.Forms.TextBox dataInscricaoTextBox;
 		private System.Windows.Forms.Label label23;
 		private System.Windows.Forms.MaskedTextBox dataNascimentoMaskedTextBox;
+		private System.Windows.Forms.TabPage ibgeTabPage;
+		private System.Windows.Forms.GroupBox groupBox4;
+		private System.Windows.Forms.Button procurarIbgeNomeButton;
+		private System.Windows.Forms.Label label27;
+		private System.Windows.Forms.TextBox nomeIbgeTextBox;
+		private System.Windows.Forms.GroupBox groupBox3;
+		private System.Windows.Forms.Button procurarIbgeCodigoButton;
+		private System.Windows.Forms.TextBox codigoIbgeTextBox;
+		private System.Windows.Forms.Label label28;
+		private System.Windows.Forms.GroupBox groupBox5;
+		private System.Windows.Forms.DataGridView dataGridView1;
+		private ACBrConsultaCNPJ acbrCnpj;
+		private ACBrConsultaCPF acbrCpf;
+		private ACBrIBGE acbrIbge;
 	}
 }
 

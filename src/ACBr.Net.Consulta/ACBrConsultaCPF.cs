@@ -30,6 +30,7 @@
 // ***********************************************************************
 
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Text;
@@ -113,12 +114,7 @@ namespace ACBr.Net.Consulta
 			dataStream.Write(byteArray, 0, byteArray.Length);
 			dataStream.Close();
 
-			var response = request.GetResponse();
-			Guard.Against<ACBrException>(response.IsNull(), "Erro ao acessar o site da Receita Federal.");
-
-			// ReSharper disable once AssignNullToNotNullAttribute
-			var stHtml = new StreamReader(response.GetResponseStream(), Encoding.GetEncoding("ISO-8859-1"));
-			var retorno = stHtml.ReadToEnd();
+			var retorno = GetHtmlResponse(request.GetResponse());
 
 			Guard.Against<ACBrException>(retorno.Contains("Os caracteres da imagem não foram preenchidos corretamente"), "Os caracteres da imagem não foram preenchidos corretamente.");
 			Guard.Against<ACBrException>(retorno.Contains("O número do CPF não é válido."), "EO número do CPF não é válido. Verifique se o mesmo foi digitado corretamente.");

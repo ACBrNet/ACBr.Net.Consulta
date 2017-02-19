@@ -10,20 +10,11 @@ namespace ACBr.Net.Consulta.Demo
 {
 	public partial class FrmMain : Form
 	{
-		#region Fields
-
-		private readonly ACBrConsultaCNPJ acbrCnpj;
-		private readonly ACBrConsultaCPF acbrCpf;
-
-		#endregion Fields
-
 		#region Constructors
 
 		public FrmMain()
 		{
 			InitializeComponent();
-			acbrCnpj = new ACBrConsultaCNPJ();
-			acbrCpf = new ACBrConsultaCPF();
 		}
 
 		#endregion Constructors
@@ -57,6 +48,26 @@ namespace ACBr.Net.Consulta.Demo
 		private void procurarCpfButton_Click(object sender, EventArgs e)
 		{
 			ProcurarCPF();
+		}
+
+		private void procurarIbgeCodigoButton_Click(object sender, EventArgs e)
+		{
+			var primaryTask = Task<int>.Factory.StartNew(() => acbrIbge.BuscarPorCodigo(codigoIbgeTextBox.Text.ToInt32()));
+			primaryTask.ContinueWith(task => MessageBox.Show(this, task.Exception.InnerExceptions.Select(x => x.Message).AsString()),
+				CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, TaskScheduler.FromCurrentSynchronizationContext());
+		}
+
+		private void procurarIbgeNomeButton_Click(object sender, EventArgs e)
+		{
+			var primaryTask = Task<int>.Factory.StartNew(() => acbrIbge.BuscarPorNome(nomeIbgeTextBox.Text));
+			primaryTask.ContinueWith(task => MessageBox.Show(this, task.Exception.InnerExceptions.Select(x => x.Message).AsString()),
+				CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, TaskScheduler.FromCurrentSynchronizationContext());
+		}
+
+		private void OnOnBuscaEfetuada(object sender, EventArgs eventArgs)
+		{
+			dataGridView1.DataSource = null;
+			dataGridView1.DataSource = acbrIbge.Resultados;
 		}
 
 		#endregion EventHandlers

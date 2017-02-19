@@ -29,8 +29,12 @@
 // <summary></summary>
 // ***********************************************************************
 
+using System.IO;
 using System.Net;
+using System.Text;
 using ACBr.Net.Core;
+using ACBr.Net.Core.Exceptions;
+using ACBr.Net.Core.Extensions;
 
 namespace ACBr.Net.Consulta
 {
@@ -44,7 +48,7 @@ namespace ACBr.Net.Consulta
 
 		#region Method
 
-		#region Private Method
+		#region Protected Method
 
 		protected virtual HttpWebRequest GetClient(string url)
 		{
@@ -59,9 +63,23 @@ namespace ACBr.Net.Consulta
 			return webRequest;
 		}
 
-		#endregion Private Method
+		protected virtual string GetHtmlResponse(WebResponse response)
+		{
+			return GetHtmlResponse(response, Encoding.GetEncoding("ISO-8859-1"));
+		}
 
-		#region Protected Method
+		protected virtual string GetHtmlResponse(WebResponse response, Encoding enconder)
+		{
+			Guard.Against<ACBrException>(response.IsNull(), "Erro ao acessar o site.");
+
+			string retorno;
+
+			// ReSharper disable once AssignNullToNotNullAttribute
+			using (var stHtml = new StreamReader(response.GetResponseStream(), enconder))
+				retorno = stHtml.ReadToEnd();
+
+			return retorno;
+		}
 
 		protected override void OnInitialize()
 		{

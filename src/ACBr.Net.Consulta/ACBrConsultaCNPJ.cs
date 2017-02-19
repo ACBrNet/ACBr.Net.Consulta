@@ -30,6 +30,7 @@
 // ***********************************************************************
 
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Text;
@@ -39,6 +40,10 @@ using ACBr.Net.Core.Extensions;
 
 namespace ACBr.Net.Consulta
 {
+	/// <summary>
+	/// Class ACBrConsultaCNPJ. This class cannot be inherited.
+	/// </summary>
+	/// <seealso cref="ACBr.Net.Consulta.ACBrConsultaBase" />
 	[ToolboxBitmap(typeof(ACBrConsultaCNPJ), "ACBrConsultaCNPJ")]
 	public sealed class ACBrConsultaCNPJ : ACBrConsultaBase
 	{
@@ -105,12 +110,7 @@ namespace ACBr.Net.Consulta
 			dataStream.Write(byteArray, 0, byteArray.Length);
 			dataStream.Close();
 
-			var response = request.GetResponse();
-			Guard.Against<ACBrException>(response.IsNull(), "Erro ao acessar o site da Receita Federal.");
-
-			// ReSharper disable once AssignNullToNotNullAttribute
-			var stHtml = new StreamReader(response.GetResponseStream(), Encoding.GetEncoding("ISO-8859-1"));
-			var retorno = stHtml.ReadToEnd();
+			var retorno = GetHtmlResponse(request.GetResponse());
 
 			Guard.Against<ACBrException>(retorno.Contains("Imagem com os caracteres anti robô"), "Catpcha errado.");
 			Guard.Against<ACBrException>(retorno.Contains("Erro na Consulta"), "Erro na Consulta.");

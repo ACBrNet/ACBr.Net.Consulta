@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+	<metadata>
+		<id>ACBr.Net.Consulta</id>
+		<version>1.0.0.0</version>
+		<title>ACBr.Net.Consulta</title>
+		<authors>Grupo ACBr.Net</authors>
+		<owners>Grupo ACBr.Net</owners>
+		<projectUrl>https://acbrnet.github.io</projectUrl>
+		<iconUrl>https://avatars2.githubusercontent.com/u/7342977?v=3&amp;s=200</iconUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>Biblioteca para consulta de CNPJ, CPF e Dados do IBGE</description>
+		<copyright>Copyright © Grupo ACBr.Net 2014 - 2017</copyright>
+		<language>pt-BR</language>
+		<tags>ACBr ACBr.Net Automação Comercial</tags>
+		<dependencies>
+			<dependency id="ACBr.Net.Core" version="1.0.1.6" />
+		</dependencies>
+	</metadata>
+	<files>
+		<file src="..\bin\Release\ACBr.Net.Consulta.dll" target="lib\net40\ACBr.Net.Consulta.dll" />
+		<file src="..\bin\Release\ACBr.Net.Consulta.XML" target="lib\net40\ACBr.Net.Consulta.XML" />
+	</files>
+</package>

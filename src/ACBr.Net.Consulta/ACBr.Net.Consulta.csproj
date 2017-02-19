@@ -33,14 +33,15 @@
     <DocumentationFile>..\..\bin\Release\ACBr.Net.Consulta.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ACBr.Net.Core, Version=1.0.1.5, Culture=neutral, PublicKeyToken=d3bb9130f8b775a6, processorArchitecture=MSIL">
-      <HintPath>..\packages\ACBr.Net.Core.1.0.1.5\lib\net40\ACBr.Net.Core.dll</HintPath>
+    <Reference Include="ACBr.Net.Core, Version=1.0.1.6, Culture=neutral, PublicKeyToken=d3bb9130f8b775a6, processorArchitecture=MSIL">
+      <HintPath>..\packages\ACBr.Net.Core.1.0.1.6\lib\net40\ACBr.Net.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -58,18 +59,21 @@
       <SubType>ACBr.Net</SubType>
     </Compile>
     <Compile Include="ACBrEmpresa.cs" />
+    <Compile Include="ACBrEndereco.cs" />
+    <Compile Include="ACBrIBGE.cs">
+      <SubType>ACBr.Net</SubType>
+    </Compile>
+    <Compile Include="ACBrMunicipio.cs" />
     <Compile Include="ACBrPessoa.cs" />
-    <Compile Include="ConsultaHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ACBrConsultaCNPJ.png" />
+    <EmbeddedResource Include="ACBrConsultaCPF.png" />
+    <EmbeddedResource Include="ACBrIBGE.png" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="ACBrConsultaCNPJ.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="ACBrConsultaCPF.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
