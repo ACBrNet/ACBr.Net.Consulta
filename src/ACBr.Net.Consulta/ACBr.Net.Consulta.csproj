@@ -52,19 +52,26 @@
     <Compile Include="ACBrConsultaBase.cs">
       <SubType>ACBr.Net</SubType>
     </Compile>
-    <Compile Include="ACBrConsultaCNPJ.cs">
+    <Compile Include="Sintegra\ACBrConsultaSintegra.cs">
       <SubType>ACBr.Net</SubType>
     </Compile>
-    <Compile Include="ACBrConsultaCPF.cs">
+    <Compile Include="Receita\ACBrConsultaCNPJ.cs">
+      <SubType>ACBr.Net</SubType>
+    </Compile>
+    <Compile Include="Receita\ACBrConsultaCPF.cs">
+      <SubType>ACBr.Net</SubType>
+    </Compile>
+    <Compile Include="CEP\ACBrCEP.cs">
       <SubType>ACBr.Net</SubType>
     </Compile>
     <Compile Include="ACBrEmpresa.cs" />
     <Compile Include="ACBrEndereco.cs" />
-    <Compile Include="ACBrIBGE.cs">
+    <Compile Include="IBGE\ACBrIBGE.cs">
       <SubType>ACBr.Net</SubType>
     </Compile>
     <Compile Include="ACBrMunicipio.cs" />
     <Compile Include="ACBrPessoa.cs" />
+    <Compile Include="Sintegra\ConsultaSintegraBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

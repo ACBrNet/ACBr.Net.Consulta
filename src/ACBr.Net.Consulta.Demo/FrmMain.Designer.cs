@@ -1,4 +1,7 @@
-﻿namespace ACBr.Net.Consulta.Demo
+﻿using ACBr.Net.Consulta.IBGE;
+using ACBr.Net.Consulta.Receita;
+
+namespace ACBr.Net.Consulta.Demo
 {
 	partial class FrmMain
 	{
@@ -105,9 +108,9 @@
 			this.procurarIbgeCodigoButton = new System.Windows.Forms.Button();
 			this.codigoIbgeTextBox = new System.Windows.Forms.TextBox();
 			this.label28 = new System.Windows.Forms.Label();
-			this.acbrCnpj = new ACBr.Net.Consulta.ACBrConsultaCNPJ();
-			this.acbrCpf = new ACBr.Net.Consulta.ACBrConsultaCPF();
-			this.acbrIbge = new ACBr.Net.Consulta.ACBrIBGE();
+			this.acbrCnpj = new ACBrConsultaCNPJ();
+			this.acbrCpf = new ACBrConsultaCPF();
+			this.acbrIbge = new ACBrIBGE();
 			this.panel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.captchaCnpjPictureBox)).BeginInit();
 			this.groupBox1.SuspendLayout();

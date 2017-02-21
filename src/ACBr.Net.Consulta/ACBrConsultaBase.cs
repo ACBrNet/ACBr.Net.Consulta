@@ -38,11 +38,15 @@ using ACBr.Net.Core.Extensions;
 
 namespace ACBr.Net.Consulta
 {
+	/// <summary>
+	/// Classe ACBrConsultaBase.
+	/// </summary>
+	/// <seealso cref="ACBr.Net.Core.ACBrComponent" />
 	public abstract class ACBrConsultaBase : ACBrComponent
 	{
 		#region Field
 
-		private CookieContainer cookies;
+		protected CookieContainer cookies;
 
 		#endregion Field
 

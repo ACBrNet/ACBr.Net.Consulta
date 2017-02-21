@@ -47,229 +47,182 @@ namespace ACBr.Net.Consulta
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ACBrEmpresa"/> class.
 		/// </summary>
-		/// <param name="retorno">The retorno.</param>
-		internal ACBrEmpresa(string retorno)
+		internal ACBrEmpresa()
 		{
-			ProcessResponse(retorno);
 		}
 
 		#endregion Constructors
 
-		#region Propertys
+		#region Properties
 
 		/// <summary>
 		/// Retorna o CNPJ.
 		/// </summary>
 		/// <value>O CNPJ.</value>
-		public string CNPJ { get; private set; }
+		public string CNPJ { get; internal set; }
+
+		/// <summary>
+		/// Retorna a inscrição estadual.
+		/// </summary>
+		/// <value>The inscricao estadual.</value>
+		public string InscricaoEstadual { get; internal set; }
 
 		/// <summary>
 		/// Retorna o tipo empresa.
 		/// </summary>
 		/// <value>O tipo empresa.</value>
-		public string TipoEmpresa { get; private set; }
+		public string TipoEmpresa { get; internal set; }
 
 		/// <summary>
 		/// Retorna a data abertura.
 		/// </summary>
 		/// <value>A data abertura.</value>
-		public DateTime DataAbertura { get; private set; }
+		public DateTime DataAbertura { get; internal set; }
 
 		/// <summary>
 		/// Retorna a razao social.
 		/// </summary>
 		/// <value>The razao social.</value>
-		public string RazaoSocial { get; private set; }
+		public string RazaoSocial { get; internal set; }
 
 		/// <summary>
 		/// Retorna o Nome Fantasia.
 		/// </summary>
 		/// <value>The nomefantasia.</value>
-		public string NomeFantasia { get; private set; }
+		public string NomeFantasia { get; internal set; }
 
 		/// <summary>
 		/// Retorna o cna e1.
 		/// </summary>
 		/// <value>The cna e1.</value>
-		public string CNAE1 { get; private set; }
+		public string CNAE1 { get; internal set; }
+
+		/// <summary>
+		/// Gets the atividade economica.
+		/// </summary>
+		/// <value>The atividade economica.</value>
+		public string AtividadeEconomica { get; internal set; }
 
 		/// <summary>
 		/// Retorna o logradouro.
 		/// </summary>
 		/// <value>The logradouro.</value>
-		public string Logradouro { get; private set; }
+		public string Logradouro { get; internal set; }
 
 		/// <summary>
 		/// Retorna o numero.
 		/// </summary>
 		/// <value>The numero.</value>
-		public string Numero { get; private set; }
+		public string Numero { get; internal set; }
 
 		/// <summary>
 		/// Retorna o complemento.
 		/// </summary>
 		/// <value>The complemento.</value>
-		public string Complemento { get; private set; }
+		public string Complemento { get; internal set; }
 
 		/// <summary>
 		/// Retorna o cep.
 		/// </summary>
 		/// <value>The cep.</value>
-		public string CEP { get; private set; }
+		public string CEP { get; internal set; }
 
 		/// <summary>
 		/// Retorna o bairro.
 		/// </summary>
 		/// <value>The bairro.</value>
-		public string Bairro { get; private set; }
+		public string Bairro { get; internal set; }
 
 		/// <summary>
 		/// Retorna o municipio.
 		/// </summary>
 		/// <value>The municipio.</value>
-		public string Municipio { get; private set; }
+		public string Municipio { get; internal set; }
 
 		/// <summary>
 		/// Retorna o uf.
 		/// </summary>
 		/// <value>The uf.</value>
-		public string UF { get; private set; }
+		public string UF { get; internal set; }
 
 		/// <summary>
 		/// Retorna o situacao.
 		/// </summary>
 		/// <value>The situacao.</value>
-		public string Situacao { get; private set; }
+		public string Situacao { get; internal set; }
 
 		/// <summary>
 		/// Retorna o data situacao.
 		/// </summary>
 		/// <value>The data situacao.</value>
-		public DateTime DataSituacao { get; private set; }
+		public DateTime DataSituacao { get; internal set; }
 
 		/// <summary>
 		/// Retorna o natureza juridica.
 		/// </summary>
 		/// <value>The natureza juridica.</value>
-		public string NaturezaJuridica { get; private set; }
+		public string NaturezaJuridica { get; internal set; }
 
 		/// <summary>
 		/// Retorna o end eletronico.
 		/// </summary>
 		/// <value>The end eletronico.</value>
-		public string EndEletronico { get; private set; }
+		public string EndEletronico { get; internal set; }
 
 		/// <summary>
 		/// Retorna o telefone.
 		/// </summary>
 		/// <value>The telefone.</value>
-		public string Telefone { get; private set; }
+		public string Telefone { get; internal set; }
 
 		/// <summary>
 		/// Retorna o ENTE FEDERATIVO RESPONSÁVEL (EFR).
 		/// </summary>
 		/// <value>The efr.</value>
-		public string EFR { get; private set; }
+		public string EFR { get; internal set; }
 
 		/// <summary>
 		/// Retorna o motivo situacao.
 		/// </summary>
 		/// <value>The motivo situacao.</value>
-		public string MotivoSituacao { get; private set; }
+		public string MotivoSituacao { get; internal set; }
 
 		/// <summary>
 		/// Retorna o cna e2.
 		/// </summary>
 		/// <value>The cna e2.</value>
-		public string[] CNAE2 { get; private set; }
+		public string[] CNAE2 { get; internal set; }
 
 		/// <summary>
 		/// Retorna o situacao especial.
 		/// </summary>
 		/// <value>The situacao especial.</value>
-		public string SituacaoEspecial { get; private set; }
+		public string SituacaoEspecial { get; internal set; }
 
 		/// <summary>
 		/// Retorna o data situacao especial.
 		/// </summary>
 		/// <value>The data situacao especial.</value>
-		public DateTime DataSituacaoEspecial { get; private set; }
-
-		#endregion Propertys
-
-		#region Methods
+		public DateTime DataSituacaoEspecial { get; internal set; }
 
 		/// <summary>
-		/// Processa a resposta do site da Receita Federal
+		/// Gets the data inicio atividade.
 		/// </summary>
-		/// <param name="retorno">The retorno.</param>
-		/// <exception cref="ACBrException">Erro ao processar retorno.</exception>
-		private void ProcessResponse(string retorno)
-		{
-			try
-			{
-				var retornoRfb = new List<string>();
-				retornoRfb.AddText(retorno.StripHtml());
-				retornoRfb.RemoveEmptyLines();
+		/// <value>The data inicio atividade.</value>
+		public DateTime DataInicioAtividade { get; internal set; }
 
-				CNPJ = LerCampo(retornoRfb, "NÚMERO DE INSCRIÇÃO");
-				if (!CNPJ.IsEmpty()) TipoEmpresa = LerCampo(retornoRfb, CNPJ);
-				DataAbertura = LerCampo(retornoRfb, "DATA DE ABERTURA").ToData();
-				RazaoSocial = LerCampo(retornoRfb, "NOME EMPRESARIAL");
-				NomeFantasia = LerCampo(retornoRfb, "TÍTULO DO ESTABELECIMENTO (NOME DE FANTASIA)");
-				CNAE1 = LerCampo(retornoRfb, "CÓDIGO E DESCRIÇÃO DA ATIVIDADE ECONÔMICA PRINCIPAL");
-				Logradouro = LerCampo(retornoRfb, "LOGRADOURO");
-				Numero = LerCampo(retornoRfb, "NÚMERO");
-				Complemento = LerCampo(retornoRfb, "COMPLEMENTO");
-				CEP = LerCampo(retornoRfb, "CEP").FormataCEP();
-				Bairro = LerCampo(retornoRfb, "BAIRRO/DISTRITO");
-				Municipio = LerCampo(retornoRfb, "MUNICÍPIO");
-				UF = LerCampo(retornoRfb, "UF");
-				Situacao = LerCampo(retornoRfb, "SITUAÇÃO CADASTRAL");
-				DataSituacao = LerCampo(retornoRfb, "DATA DA SITUAÇÃO CADASTRAL").ToData();
-				NaturezaJuridica = LerCampo(retornoRfb, "CÓDIGO E DESCRIÇÃO DA NATUREZA JURÍDICA");
-				EndEletronico = LerCampo(retornoRfb, "ENDEREÇO ELETRÔNICO");
-				if (EndEletronico == "TELEFONE") EndEletronico = string.Empty;
-				Telefone = LerCampo(retornoRfb, "TELEFONE");
-				EFR = LerCampo(retornoRfb, "ENTE FEDERATIVO RESPONSÁVEL (EFR)");
-				MotivoSituacao = LerCampo(retornoRfb, "MOTIVO DE SITUAÇÃO CADASTRAL");
-				SituacaoEspecial = LerCampo(retornoRfb, "SITUAÇÃO ESPECIAL");
-				DataSituacaoEspecial = LerCampo(retornoRfb, "DATA DA SITUAÇÃO ESPECIAL").ToData();
+		/// <summary>
+		/// Gets the regime apuracao.
+		/// </summary>
+		/// <value>The regime apuracao.</value>
+		public string RegimeApuracao { get; internal set; }
 
-				var listCNAE2 = new List<string>();
-				var aux = LerCampo(retornoRfb, "CÓDIGO E DESCRIÇÃO DAS ATIVIDADES ECONÔMICAS SECUNDÁRIAS");
-				if (!aux.IsEmpty()) listCNAE2.Add(aux.RemoveDoubleSpaces());
+		/// <summary>
+		/// Gets the data emitente n fe.
+		/// </summary>
+		/// <value>The data emitente n fe.</value>
+		public DateTime DataEmitenteNFe { get; internal set; }
 
-				do
-				{
-					aux = LerCampo(retornoRfb, aux);
-					if (!aux.IsEmpty()) listCNAE2.Add(aux.RemoveDoubleSpaces());
-				} while (!aux.IsEmpty());
-
-				CNAE2 = listCNAE2.ToArray();
-			}
-			catch (Exception exception)
-			{
-				throw new ACBrException(exception, "Erro ao processar retorno.");
-			}
-		}
-
-		public static string LerCampo(IList<string> retorno, string campo)
-		{
-			var ret = string.Empty;
-			for (var i = 0; i < retorno.Count; i++)
-			{
-				var linha = retorno[i].Trim();
-				if (linha != campo) continue;
-
-				ret = retorno[i + 1].Trim().Replace("&nbsp;", string.Empty);
-				retorno.RemoveAt(i);
-				break;
-			}
-
-			return ret;
-		}
-
-		#endregion Methods
+		#endregion Properties
 	}
 }
