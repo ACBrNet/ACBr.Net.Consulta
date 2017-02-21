@@ -30,10 +30,12 @@
 // ***********************************************************************
 
 using System;
+using System.Drawing;
 using ACBr.Net.Core;
 
 namespace ACBr.Net.Consulta.CEP
 {
+	[ToolboxBitmap(typeof(ACBrCEP), "ACBrCEP")]
 	public sealed class ACBrCEP : ACBrComponent
 	{
 		#region Methods

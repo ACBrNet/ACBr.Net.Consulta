@@ -75,12 +75,20 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ACBrConsultaCNPJ.png" />
-    <EmbeddedResource Include="ACBrConsultaCPF.png" />
-    <EmbeddedResource Include="ACBrIBGE.png" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <EmbeddedResource Include="ACBrConsultaCNPJ.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ACBrConsultaCPF.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ACBrIBGE.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ACBrCEP.bmp" />
+    <EmbeddedResource Include="ACBrConsultaSintegra.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

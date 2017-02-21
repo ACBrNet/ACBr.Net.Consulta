@@ -40,6 +40,7 @@ namespace ACBr.Net.Consulta.Sintegra
 	/// Class ACBrConsultaSintegra. This class cannot be inherited.
 	/// </summary>
 	/// <seealso cref="ACBr.Net.Consulta.ACBrConsultaBase" />
+	[ToolboxBitmap(typeof(ACBrConsultaSintegra), "ACBrConsultaSintegra")]
 	public sealed class ACBrConsultaSintegra : ACBrConsultaBase
 	{
 		#region Fields
