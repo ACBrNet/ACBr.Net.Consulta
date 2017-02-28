@@ -43,8 +43,8 @@ namespace ACBr.Net.Consulta.Receita
 	/// <summary>
 	/// Class ACBrConsultaCNPJ. This class cannot be inherited.
 	/// </summary>
-	/// <seealso cref="ACBr.Net.Consulta.ACBrConsultaBase" />
-	[ToolboxBitmap(typeof(ACBrConsultaCNPJ), "ACBrConsultaCNPJ")]
+	/// <seealso cref="ACBrConsultaBase" />
+	[ToolboxBitmap(typeof(ACBrConsultaCNPJ), "ACBr.Net.Consulta.ACBrConsultaCNPJ.bmp")]
 	public sealed class ACBrConsultaCNPJ : ACBrConsultaBase
 	{
 		#region Field
@@ -55,6 +55,15 @@ namespace ACBr.Net.Consulta.Receita
 		private const string paginaCaptcha = "captcha/gerarCaptcha.asp";
 
 		#endregion Field
+
+		#region Events
+
+		/// <summary>
+		/// Evento disparado se a consultar for chamada com o captcha vazio.
+		/// </summary>
+		public event EventHandler<CaptchaEventArgs> OnGetCaptcha;
+
+		#endregion Events
 
 		#region Method
 
@@ -78,7 +87,10 @@ namespace ACBr.Net.Consulta.Receita
 			request = GetClient(urlBaseReceitaFederal + paginaCaptcha);
 			response = request.GetResponse();
 
-			return Image.FromStream(response.GetResponseStream());
+			var captchaStream = response.GetResponseStream();
+			Guard.Against<ACBrCaptchaException>(captchaStream.IsNull(), "Erro ao carregar captcha");
+
+			return Image.FromStream(captchaStream);
 		}
 
 		/// <summary>
@@ -87,9 +99,18 @@ namespace ACBr.Net.Consulta.Receita
 		/// <param name="cnpj">O CNPJ.</param>
 		/// <param name="captcha">O captcha.</param>
 		/// <returns>Dados da empresa.</returns>
-		public ACBrEmpresa Consulta(string cnpj, string captcha)
+		public ACBrEmpresa Consulta(string cnpj, string captcha = "")
 		{
 			Guard.Against<ACBrException>(cnpj.IsEmpty(), "É necessário digitar o CNPJ.");
+
+			if (captcha.IsEmpty() && OnGetCaptcha != null)
+			{
+				var e = new CaptchaEventArgs();
+				OnGetCaptcha.Raise(this, e);
+
+				captcha = e.Captcha;
+			}
+
 			Guard.Against<ACBrException>(captcha.IsEmpty(), "É necessário digitar o captcha.");
 
 			var request = GetClient(urlBaseReceitaFederal + paginaValidacao);
@@ -112,7 +133,7 @@ namespace ACBr.Net.Consulta.Receita
 
 			var retorno = GetHtmlResponse(request.GetResponse());
 
-			Guard.Against<ACBrException>(retorno.Contains("Imagem com os caracteres anti robô"), "Catpcha errado.");
+			Guard.Against<ACBrCaptchaException>(retorno.Contains("Imagem com os caracteres anti robô"), "Catpcha errado.");
 			Guard.Against<ACBrException>(retorno.Contains("Erro na Consulta"), "Erro na Consulta.");
 			Guard.Against<ACBrException>(retorno.Contains("Verifique se o mesmo foi digitado corretamente"), $"Não existe no Cadastro de Pessoas Jurídicas o número de CNPJ informado.{Environment.NewLine}Verifique se o mesmo foi digitado corretamente.");
 			Guard.Against<ACBrException>(retorno.Contains("a. No momento não podemos atender a sua solicitação. Por favor tente mais tarde."), "Erro no site da receita federal. Tente mais tarde.");

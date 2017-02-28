@@ -1,12 +1,12 @@
 // ***********************************************************************
 // Assembly         : ACBr.Net.Consulta
 // Author           : RFTD
-// Created          : 02-20-2017
+// Created          : 02-16-2017
 //
 // Last Modified By : RFTD
-// Last Modified On : 02-20-2017
+// Last Modified On : 02-21-2017
 // ***********************************************************************
-// <copyright file="ACBrConsultaSintegra.cs" company="ACBr.Net">
+// <copyright file="CaptchaEventArgs.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2017 Grupo ACBr.Net
 //
@@ -30,59 +30,23 @@
 // ***********************************************************************
 
 using System;
-using System.Drawing;
-using ACBr.Net.Core;
-using ACBr.Net.Core.Exceptions;
-using ACBr.Net.Core.Extensions;
 
-namespace ACBr.Net.Consulta.Sintegra
+namespace ACBr.Net.Consulta
 {
-	/// <summary>
-	/// Class ACBrConsultaSintegra. This class cannot be inherited.
-	/// </summary>
-	/// <seealso cref="ACBrConsultaBase" />
-	[ToolboxBitmap(typeof(ACBrConsultaSintegra), "ACBr.Net.Consulta.ACBrConsultaSintegra.bmp")]
-	public sealed class ACBrConsultaSintegra : ACBrConsultaBase
+	public sealed class CaptchaEventArgs : EventArgs
 	{
-		#region Fields
+		#region Constructors
 
-		private ConsultaSintegraBase consultaSintegra;
-
-		#endregion Fields
-
-		#region Events
-
-		public event EventHandler<CaptchaEventArgs> OnGetCaptcha;
-
-		#endregion Events
-
-		#region Methods
-
-		/// <summary>
-		/// Gets the captcha.
-		/// </summary>
-		/// <returns>Image.</returns>
-		public Image GetCaptcha()
+		public CaptchaEventArgs()
 		{
-			Guard.Against<ACBrException>(consultaSintegra.IsNull(), "Selecione um estado primeiro");
-
-			return consultaSintegra.GetCaptcha();
 		}
 
-		/// <summary>
-		/// Consultas the specified CNPJ.
-		/// </summary>
-		/// <param name="cnpj">The CNPJ.</param>
-		/// <param name="ie">The ie.</param>
-		/// <param name="captcha">The captcha.</param>
-		/// <returns>ACBrEmpresa.</returns>
-		public ACBrEmpresa Consulta(string cnpj, string ie = "", string captcha = "")
-		{
-			Guard.Against<ACBrException>(consultaSintegra.IsNull(), "Selecione um estado primeiro");
+		#endregion Constructors
 
-			return consultaSintegra.Consulta(cnpj, ie, captcha);
-		}
+		#region Proprieties
 
-		#endregion Methods
+		public string Captcha { get; set; }
+
+		#endregion Proprieties
 	}
 }

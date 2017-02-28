@@ -41,6 +41,8 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -49,9 +51,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ACBrCaptchaException.cs" />
     <Compile Include="ACBrConsultaBase.cs">
       <SubType>ACBr.Net</SubType>
     </Compile>
+    <Compile Include="CaptchaEventArgs.cs" />
+    <Compile Include="CEP\CEPWebService.cs" />
+    <Compile Include="CEP\CorreiosWebservice.cs" />
+    <Compile Include="CEP\ICepWebservice.cs" />
+    <Compile Include="CEP\ViaCepWebservice.cs" />
     <Compile Include="Sintegra\ACBrConsultaSintegra.cs">
       <SubType>ACBr.Net</SubType>
     </Compile>

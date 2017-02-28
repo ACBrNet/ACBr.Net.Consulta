@@ -1,12 +1,12 @@
 // ***********************************************************************
 // Assembly         : ACBr.Net.Consulta
 // Author           : RFTD
-// Created          : 02-16-2017
+// Created          : 02-21-2017
 //
 // Last Modified By : RFTD
-// Last Modified On : 02-16-2017
+// Last Modified On : 02-21-2017
 // ***********************************************************************
-// <copyright file="ACBrEmpresa.cs" company="ACBr.Net">
+// <copyright file="CEPWebService.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2017 Grupo ACBr.Net
 //
@@ -29,29 +29,12 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace ACBr.Net.Consulta
+namespace ACBr.Net.Consulta.CEP
 {
-	/// <summary>
-	/// Class ACBrEndereco. This class cannot be inherited.
-	/// </summary>
-	public sealed class ACBrEndereco
+	public enum CEPWebService
 	{
-		public string CEP { get; set; }
-
-		public string TipoLogradouro { get; set; }
-
-		public string Logradouro { get; set; }
-
-		public string Complemento { get; set; }
-
-		public string Bairro { get; set; }
-
-		public string Municipio { get; set; }
-
-		public string UF { get; set; }
-
-		public string IBGEMunicipio { get; set; }
-
-		public string IBGEUF { get; set; }
+		None,
+		Correios,
+		ViaCep
 	}
 }

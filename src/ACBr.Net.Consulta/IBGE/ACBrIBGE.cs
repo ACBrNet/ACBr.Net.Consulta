@@ -46,7 +46,7 @@ namespace ACBr.Net.Consulta.IBGE
 	/// Class ACBrIBGE. This class cannot be inherited.
 	/// </summary>
 	/// <seealso cref="ACBr.Net.Consulta.ACBrConsultaBase" />
-	[ToolboxBitmap(typeof(ACBrIBGE), "ACBrIBGE")]
+	[ToolboxBitmap(typeof(ACBrIBGE), "ACBr.Net.Consulta.ACBrIBGE.bmp")]
 	public sealed class ACBrIBGE : ACBrConsultaBase
 	{
 		#region Fields

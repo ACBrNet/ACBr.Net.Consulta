@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ACBr.Net.Consulta.CEP;
 using ACBr.Net.Core.Extensions;
 
 namespace ACBr.Net.Consulta.Demo
@@ -25,24 +26,13 @@ namespace ACBr.Net.Consulta.Demo
 
 		private void FrmMain_Shown(object sender, EventArgs e)
 		{
-			RefreshCaptchaCNPJ();
-			RefreshCaptchaCPF();
 			cnpjMaskedTextBox.Focus();
-		}
-
-		private void captchaCnpjLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-		{
-			RefreshCaptchaCNPJ();
+			webserviceCepComboBox.EnumDataSource<CEPWebService>(CEPWebService.None);
 		}
 
 		private void procurarCnpjButton_Click(object sender, EventArgs e)
 		{
 			ProcurarCNPJ();
-		}
-
-		private void captchaCpfLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-		{
-			RefreshCaptchaCPF();
 		}
 
 		private void procurarCpfButton_Click(object sender, EventArgs e)
@@ -53,58 +43,67 @@ namespace ACBr.Net.Consulta.Demo
 		private void procurarIbgeCodigoButton_Click(object sender, EventArgs e)
 		{
 			var primaryTask = Task<int>.Factory.StartNew(() => acbrIbge.BuscarPorCodigo(codigoIbgeTextBox.Text.ToInt32()));
-			primaryTask.ContinueWith(task => MessageBox.Show(this, task.Exception.InnerExceptions.Select(x => x.Message).AsString()),
+			primaryTask.ContinueWith(task => MessageBox.Show(this, task.Exception.InnerExceptions.Select(x => x.Message).AsString(), this.Text),
 				CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, TaskScheduler.FromCurrentSynchronizationContext());
 		}
 
 		private void procurarIbgeNomeButton_Click(object sender, EventArgs e)
 		{
 			var primaryTask = Task<int>.Factory.StartNew(() => acbrIbge.BuscarPorNome(nomeIbgeTextBox.Text));
-			primaryTask.ContinueWith(task => MessageBox.Show(this, task.Exception.InnerExceptions.Select(x => x.Message).AsString()),
+			primaryTask.ContinueWith(task => MessageBox.Show(this, task.Exception.InnerExceptions.Select(x => x.Message).AsString(), this.Text),
 				CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, TaskScheduler.FromCurrentSynchronizationContext());
 		}
 
-		private void OnOnBuscaEfetuada(object sender, EventArgs eventArgs)
+		private void buscaCepButton_Click(object sender, EventArgs e)
 		{
-			dataGridView1.DataSource = null;
-			dataGridView1.DataSource = acbrIbge.Resultados;
+			var primaryTask = Task<int>.Factory.StartNew(() => acbrCEP.BuscarPorCEP(cepTextBox.Text));
+			primaryTask.ContinueWith(task => MessageBox.Show(this, task.Exception.InnerExceptions.Select(x => x.Message).AsString(), this.Text),
+				CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, TaskScheduler.FromCurrentSynchronizationContext());
+		}
+
+		private void buscaLogradouroButton_Click(object sender, EventArgs e)
+		{
+			var uf = ufComboBox.SelectedItem.ToString();
+			var municipio = municipioCepTextBox.Text;
+			var logradouro = logradouroCepTextBox.Text;
+
+			var primaryTask = Task<int>.Factory.StartNew(() => acbrCEP.BuscarPorLogradouro(uf, municipio, logradouro));
+			primaryTask.ContinueWith(task => MessageBox.Show(this, task.Exception.InnerExceptions.Select(x => x.Message).AsString(), this.Text),
+				CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, TaskScheduler.FromCurrentSynchronizationContext());
+		}
+
+		private void webserviceCepComboBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			acbrCEP.WebService = (CEPWebService)webserviceCepComboBox.SelectedItem;
+		}
+
+		private void acbrCpf_OnGetCaptcha(object sender, CaptchaEventArgs e)
+		{
+			e.Captcha = FrmCaptcha.GetCaptcha(this, () => acbrCpf.GetCaptcha());
+		}
+
+		private void acbrCnpj_OnGetCaptcha(object sender, CaptchaEventArgs e)
+		{
+			e.Captcha = FrmCaptcha.GetCaptcha(this, () => acbrCnpj.GetCaptcha());
+		}
+
+		private void acbrIbge_OnOnBuscaEfetuada(object sender, EventArgs eventArgs)
+		{
+			ibgeDataGridView.DataSource = null;
+			ibgeDataGridView.DataSource = acbrIbge.Resultados;
+		}
+
+		private void acbrCEP_OnBuscaEfetuada(object sender, EventArgs e)
+		{
+			cepDataGridView.DataSource = null;
+			cepDataGridView.DataSource = acbrCEP.Resultados;
 		}
 
 		#endregion EventHandlers
 
-		private void RefreshCaptchaCNPJ()
-		{
-			var primaryTask = Task<Image>.Factory.StartNew(() => acbrCnpj.GetCaptcha());
-			primaryTask.ContinueWith(task =>
-			{
-				if (task.Result.IsNull()) return;
-
-				captchaCnpjPictureBox.Image = task.Result;
-				captchaCnpjTextBox.Text = string.Empty;
-			}, CancellationToken.None, TaskContinuationOptions.NotOnCanceled | TaskContinuationOptions.NotOnFaulted, TaskScheduler.FromCurrentSynchronizationContext());
-
-			primaryTask.ContinueWith(task => MessageBox.Show(this, task.Exception.InnerExceptions.Select(x => x.Message).AsString()),
-				CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, TaskScheduler.FromCurrentSynchronizationContext());
-		}
-
-		private void RefreshCaptchaCPF()
-		{
-			var primaryTask = Task<Image>.Factory.StartNew(() => acbrCpf.GetCaptcha());
-			primaryTask.ContinueWith(task =>
-			{
-				if (task.Result.IsNull()) return;
-
-				captchCpfPictureBox.Image = task.Result;
-				captchaCpfTextBox.Text = string.Empty;
-			}, CancellationToken.None, TaskContinuationOptions.NotOnCanceled | TaskContinuationOptions.NotOnFaulted, TaskScheduler.FromCurrentSynchronizationContext());
-
-			primaryTask.ContinueWith(task => MessageBox.Show(this, task.Exception.InnerExceptions.Select(x => x.Message).AsString()),
-				CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, TaskScheduler.FromCurrentSynchronizationContext());
-		}
-
 		private void ProcurarCNPJ()
 		{
-			var primaryTask = Task<ACBrEmpresa>.Factory.StartNew(() => acbrCnpj.Consulta(cnpjMaskedTextBox.Text, captchaCnpjTextBox.Text));
+			var primaryTask = Task<ACBrEmpresa>.Factory.StartNew(() => acbrCnpj.Consulta(cnpjMaskedTextBox.Text));
 			primaryTask.ContinueWith(task =>
 			{
 				var retorno = task.Result;
@@ -119,21 +118,19 @@ namespace ACBr.Net.Consulta.Demo
 				bairroTextBox.Text = retorno.Bairro;
 				municipioTextBox.Text = retorno.Municipio;
 				ufTextBox.Text = retorno.UF;
-				cepTextBox.Text = retorno.CEP;
+				cepCnpjTextBox.Text = retorno.CEP;
 				situacaoTextBox.Text = retorno.Situacao;
 				naturezaJuridicaTextBox.Text = retorno.NaturezaJuridica;
 				cnaeSecundariosTextBox.Text = retorno.CNAE2.AsString();
 			}, CancellationToken.None, TaskContinuationOptions.NotOnCanceled | TaskContinuationOptions.NotOnFaulted, TaskScheduler.FromCurrentSynchronizationContext());
 
-			primaryTask.ContinueWith(task => MessageBox.Show(this, task.Exception.InnerExceptions.Select(x => x.Message).AsString()),
+			primaryTask.ContinueWith(task => MessageBox.Show(this, task.Exception.InnerExceptions.Select(x => x.Message).AsString(), this.Text),
 				CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, TaskScheduler.FromCurrentSynchronizationContext());
-
-			primaryTask.ContinueWith(task => RefreshCaptchaCNPJ(), TaskScheduler.FromCurrentSynchronizationContext());
 		}
 
 		private void ProcurarCPF()
 		{
-			var primaryTask = Task<ACBrPessoa>.Factory.StartNew(() => acbrCpf.Consulta(cpfMaskedTextBox.Text, dataNascimentoMaskedTextBox.Text.ToData(), captchaCpfTextBox.Text));
+			var primaryTask = Task<ACBrPessoa>.Factory.StartNew(() => acbrCpf.Consulta(cpfMaskedTextBox.Text, dataNascimentoMaskedTextBox.Text.ToData()));
 			primaryTask.ContinueWith(task =>
 			{
 				var retorno = task.Result;
@@ -145,10 +142,8 @@ namespace ACBr.Net.Consulta.Demo
 				codControleTextBox.Text = retorno.CodCtrlControle;
 			}, CancellationToken.None, TaskContinuationOptions.NotOnCanceled | TaskContinuationOptions.NotOnFaulted, TaskScheduler.FromCurrentSynchronizationContext());
 
-			primaryTask.ContinueWith(task => MessageBox.Show(this, task.Exception.InnerExceptions.Select(x => x.Message).AsString()),
+			primaryTask.ContinueWith(task => MessageBox.Show(this, task.Exception.InnerExceptions.Select(x => x.Message).AsString(), this.Text),
 				CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, TaskScheduler.FromCurrentSynchronizationContext());
-
-			primaryTask.ContinueWith(task => RefreshCaptchaCPF(), TaskScheduler.FromCurrentSynchronizationContext());
 		}
 
 		#endregion Methods
