@@ -31,10 +31,10 @@
 
 namespace ACBr.Net.Consulta.CEP
 {
-	internal interface ICepWebservice
-	{
-		ACBrEndereco[] BuscarPorCEP(string cep);
+    internal interface ICepWebservice
+    {
+        ACBrEndereco[] BuscarPorCEP(string cep);
 
-		ACBrEndereco[] BuscarPorLogradouro(string uf, string municipio, string logradouro, string tipoLogradouro = "", string bairro = "");
-	}
+        ACBrEndereco[] BuscarPorLogradouro(ConsultaUF uf, string municipio, string logradouro, string tipoLogradouro = "", string bairro = "");
+    }
 }

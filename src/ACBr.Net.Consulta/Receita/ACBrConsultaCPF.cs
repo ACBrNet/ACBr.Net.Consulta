@@ -42,10 +42,10 @@ namespace ACBr.Net.Consulta.Receita
 	/// <summary>
 	/// Class ACBrConsultaCPF. This class cannot be inherited.
 	/// </summary>
-	/// <seealso cref="ACBrConsultaBase" />
+	/// <seealso cref="ACBrComponentConsulta" />
 	[ToolboxBitmap(typeof(ACBrConsultaCPF), "ACBr.Net.Consulta.ACBrConsultaCPF.bmp")]
 	// ReSharper disable once InconsistentNaming
-	public sealed class ACBrConsultaCPF : ACBrConsultaBase
+	public sealed class ACBrConsultaCPF : ACBrComponentConsulta
 	{
 		#region Field
 

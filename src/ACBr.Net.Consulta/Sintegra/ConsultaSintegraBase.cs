@@ -1,10 +1,10 @@
-// ***********************************************************************
+﻿// ***********************************************************************
 // Assembly         : ACBr.Net.Consulta
 // Author           : RFTD
-// Created          : 02-20-2017
+// Created          : 02-16-2017
 //
 // Last Modified By : RFTD
-// Last Modified On : 02-20-2017
+// Last Modified On : 02-16-2017
 // ***********************************************************************
 // <copyright file="ConsultaSintegraBase.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
@@ -29,35 +29,90 @@
 // <summary></summary>
 // ***********************************************************************
 
+using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
+using System.Net;
+using System.Text;
+using ACBr.Net.Core;
+using ACBr.Net.Core.Exceptions;
+using ACBr.Net.Core.Extensions;
 
 namespace ACBr.Net.Consulta.Sintegra
 {
-	internal abstract class ConsultaSintegraBase
-	{
-		#region Constructors
+    internal abstract class ConsultaSintegraBase<T> : IConsultaSintegra where T : class, IConsultaSintegra
+    {
+        #region Field
 
-		protected ConsultaSintegraBase(ACBrConsultaSintegra parent)
-		{
-			Parent = parent;
-		}
+        protected CookieContainer cookies;
+        protected Dictionary<string, string> urlParams;
+        private static T instance;
 
-		#endregion Constructors
+        #endregion Field
 
-		#region Properties
+        #region Constructors
 
-		public ACBrConsultaSintegra Parent { get; }
+        protected ConsultaSintegraBase()
+        {
+            cookies = new CookieContainer();
+            urlParams = new Dictionary<string, string>();
+        }
 
-		public bool HasCaptcha { get; internal set; }
+        #endregion Constructors
 
-		#endregion Properties
+        #region Properties
 
-		#region Methods
+        public static T Instance => instance ?? (instance = Activator.CreateInstance<T>());
 
-		public abstract Image GetCaptcha();
+        #endregion Properties
 
-		public abstract ACBrEmpresa Consulta(string cnpj, string ie, string captcha);
+        #region Method
 
-		#endregion Methods
-	}
+        #region Interface Methods
+
+        public abstract Image GetCaptcha();
+
+        public abstract ACBrEmpresa Consulta(string cnpj, string ie, string captcha);
+
+        #endregion Interface Methods
+
+        #region Protected Method
+
+        protected HttpWebRequest GetClient(string url)
+        {
+            var webRequest = (HttpWebRequest)WebRequest.Create(url);
+            webRequest.CookieContainer = cookies;
+            webRequest.ProtocolVersion = HttpVersion.Version10;
+            webRequest.UserAgent = "Mozilla/4.0 (compatible; Synapse)";
+
+            webRequest.KeepAlive = true;
+            webRequest.Headers.Add(HttpRequestHeader.KeepAlive, "300");
+
+            return webRequest;
+        }
+
+        protected string GetHtmlResponse(WebResponse response)
+        {
+            return GetHtmlResponse(response, Encoding.GetEncoding("ISO-8859-1"));
+        }
+
+        protected string GetHtmlResponse(WebResponse response, Encoding enconder)
+        {
+            Guard.Against<ACBrException>(response == null, "Erro ao acessar o site.");
+
+            string retorno;
+
+            // ReSharper disable once AssignNullToNotNullAttribute
+            // ReSharper disable once PossibleNullReferenceException
+            using (var stHtml = new StreamReader(response.GetResponseStream(), enconder))
+                retorno = stHtml.ReadToEnd();
+
+            return retorno;
+        }
+
+        #endregion Protected Method
+
+        #endregion Method
+    }
 }

@@ -31,27 +31,27 @@
 
 namespace ACBr.Net.Consulta
 {
-	/// <summary>
-	/// Class ACBrEndereco. This class cannot be inherited.
-	/// </summary>
-	public sealed class ACBrEndereco
-	{
-		public string CEP { get; set; }
+    /// <summary>
+    /// Class ACBrEndereco. This class cannot be inherited.
+    /// </summary>
+    public sealed class ACBrEndereco
+    {
+        public string CEP { get; set; }
 
-		public string TipoLogradouro { get; set; }
+        public string TipoLogradouro { get; set; }
 
-		public string Logradouro { get; set; }
+        public string Logradouro { get; set; }
 
-		public string Complemento { get; set; }
+        public string Complemento { get; set; }
 
-		public string Bairro { get; set; }
+        public string Bairro { get; set; }
 
-		public string Municipio { get; set; }
+        public string Municipio { get; set; }
 
-		public string UF { get; set; }
+        public ConsultaUF UF { get; set; }
 
-		public string IBGEMunicipio { get; set; }
+        public string IBGEMunicipio { get; set; }
 
-		public string IBGEUF { get; set; }
-	}
+        public string IBGEUF { get; set; }
+    }
 }

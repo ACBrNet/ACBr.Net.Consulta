@@ -1,12 +1,12 @@
-// ***********************************************************************
+﻿// ***********************************************************************
 // Assembly         : ACBr.Net.Consulta
 // Author           : RFTD
-// Created          : 02-18-2017
+// Created          : 02-20-2017
 //
 // Last Modified By : RFTD
-// Last Modified On : 02-18-2017
+// Last Modified On : 02-20-2017
 // ***********************************************************************
-// <copyright file="ACBrMunicipio.cs" company="ACBr.Net">
+// <copyright file="IConsultaSintegra.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2017 Grupo ACBr.Net
 //
@@ -29,18 +29,14 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace ACBr.Net.Consulta
+using System.Drawing;
+
+namespace ACBr.Net.Consulta.Sintegra
 {
-    public sealed class ACBrMunicipio
+    internal interface IConsultaSintegra
     {
-        public int Codigo { get; internal set; }
+        Image GetCaptcha();
 
-        public string Nome { get; internal set; }
-
-        public ConsultaUF UF { get; internal set; }
-
-        public int CodigoUF { get; internal set; }
-
-        public decimal Area { get; internal set; }
+        ACBrEmpresa Consulta(string cnpj, string ie, string captcha);
     }
 }
