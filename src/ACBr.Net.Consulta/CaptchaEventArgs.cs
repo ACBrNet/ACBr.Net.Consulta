@@ -1,12 +1,12 @@
 // ***********************************************************************
 // Assembly         : ACBr.Net.Consulta
 // Author           : RFTD
-// Created          : 02-18-2017
+// Created          : 02-16-2017
 //
 // Last Modified By : RFTD
-// Last Modified On : 02-18-2017
+// Last Modified On : 02-21-2017
 // ***********************************************************************
-// <copyright file="ACBrMunicipio.cs" company="ACBr.Net">
+// <copyright file="CaptchaEventArgs.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2017 Grupo ACBr.Net
 //
@@ -29,18 +29,24 @@
 // <summary></summary>
 // ***********************************************************************
 
+using System;
+
 namespace ACBr.Net.Consulta
 {
-    public sealed class ACBrMunicipio
-    {
-        public int Codigo { get; internal set; }
+	public sealed class CaptchaEventArgs : EventArgs
+	{
+		#region Constructors
 
-        public string Nome { get; internal set; }
+		public CaptchaEventArgs()
+		{
+		}
 
-        public ConsultaUF UF { get; internal set; }
+		#endregion Constructors
 
-        public int CodigoUF { get; internal set; }
+		#region Proprieties
 
-        public decimal Area { get; internal set; }
-    }
+		public string Captcha { get; set; }
+
+		#endregion Proprieties
+	}
 }

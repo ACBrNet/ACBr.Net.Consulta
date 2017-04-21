@@ -30,7 +30,6 @@
 // ***********************************************************************
 
 using System;
-using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Text;
@@ -38,15 +37,15 @@ using ACBr.Net.Core;
 using ACBr.Net.Core.Exceptions;
 using ACBr.Net.Core.Extensions;
 
-namespace ACBr.Net.Consulta
+namespace ACBr.Net.Consulta.Receita
 {
 	/// <summary>
 	/// Class ACBrConsultaCPF. This class cannot be inherited.
 	/// </summary>
-	/// <seealso cref="ACBr.Net.Consulta.ACBrConsultaBase" />
-	[ToolboxBitmap(typeof(ACBrConsultaCPF), "ACBrConsultaCPF")]
+	/// <seealso cref="ACBrComponentConsulta" />
+	[ToolboxBitmap(typeof(ACBrConsultaCPF), "ACBr.Net.Consulta.ACBrConsultaCPF.bmp")]
 	// ReSharper disable once InconsistentNaming
-	public sealed class ACBrConsultaCPF : ACBrConsultaBase
+	public sealed class ACBrConsultaCPF : ACBrComponentConsulta
 	{
 		#region Field
 
@@ -56,6 +55,15 @@ namespace ACBr.Net.Consulta
 		private const string paginaCaptcha = "captcha/gerarCaptcha.asp";
 
 		#endregion Field
+
+		#region Events
+
+		/// <summary>
+		/// Evento disparado se a consultar for chamada com o captcha vazio.
+		/// </summary>
+		public event EventHandler<CaptchaEventArgs> OnGetCaptcha;
+
+		#endregion Events
 
 		#region Method
 
@@ -79,7 +87,10 @@ namespace ACBr.Net.Consulta
 			request = GetClient(urlBaseReceitaFederal + paginaCaptcha);
 			response = request.GetResponse();
 
-			return Image.FromStream(response.GetResponseStream());
+			var captchaStream = response.GetResponseStream();
+			Guard.Against<ACBrCaptchaException>(captchaStream.IsNull(), "Erro ao carregar captcha");
+
+			return Image.FromStream(captchaStream);
 		}
 
 		/// <summary>
@@ -89,10 +100,19 @@ namespace ACBr.Net.Consulta
 		/// <param name="dataNascimento">A Data de Nascimento.</param>
 		/// <param name="captcha">O captcha.</param>
 		/// <returns>Dados da pessoa.</returns>
-		public ACBrPessoa Consulta(string cpf, DateTime dataNascimento, string captcha)
+		public ACBrPessoa Consulta(string cpf, DateTime dataNascimento, string captcha = "")
 		{
 			Guard.Against<ACBrException>(cpf.IsEmpty(), "É necessário digitar o CPF.");
 			Guard.Against<ACBrException>(dataNascimento == DateTime.MinValue, "É necessário digitar a data de nascimento.");
+
+			if (captcha.IsEmpty() && OnGetCaptcha != null)
+			{
+				var e = new CaptchaEventArgs();
+				OnGetCaptcha.Raise(this, e);
+
+				captcha = e.Captcha;
+			}
+
 			Guard.Against<ACBrException>(captcha.IsEmpty(), "É necessário digitar o captcha.");
 
 			var request = GetClient(urlBaseReceitaFederal + paginaValidacao);
@@ -116,7 +136,7 @@ namespace ACBr.Net.Consulta
 
 			var retorno = GetHtmlResponse(request.GetResponse());
 
-			Guard.Against<ACBrException>(retorno.Contains("Os caracteres da imagem não foram preenchidos corretamente"), "Os caracteres da imagem não foram preenchidos corretamente.");
+			Guard.Against<ACBrCaptchaException>(retorno.Contains("Os caracteres da imagem não foram preenchidos corretamente"), "Os caracteres da imagem não foram preenchidos corretamente.");
 			Guard.Against<ACBrException>(retorno.Contains("O número do CPF não é válido."), "EO número do CPF não é válido. Verifique se o mesmo foi digitado corretamente.");
 			Guard.Against<ACBrException>(retorno.Contains("Não existe no Cadastro de Pessoas Jurídicas o número de CPF informado."), $"Não existe no Cadastro de Pessoas Jurídicas o número de CPF informado.{Environment.NewLine}Verifique se o mesmo foi digitado corretamente.");
 			Guard.Against<ACBrException>(retorno.Contains("a. No momento não podemos atender a sua solicitação. Por favor tente mais tarde."), "Erro no site da receita federal. Tente mais tarde.");

@@ -31,7 +31,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -41,14 +40,14 @@ using ACBr.Net.Core;
 using ACBr.Net.Core.Exceptions;
 using ACBr.Net.Core.Extensions;
 
-namespace ACBr.Net.Consulta
+namespace ACBr.Net.Consulta.IBGE
 {
 	/// <summary>
 	/// Class ACBrIBGE. This class cannot be inherited.
 	/// </summary>
-	/// <seealso cref="ACBr.Net.Consulta.ACBrConsultaBase" />
-	[ToolboxBitmap(typeof(ACBrIBGE), "ACBrIBGE")]
-	public sealed class ACBrIBGE : ACBrConsultaBase, IDisposable
+	/// <seealso cref="ACBrComponentConsulta" />
+	[ToolboxBitmap(typeof(ACBrIBGE), "ACBr.Net.Consulta.ACBrIBGE.bmp")]
+	public sealed class ACBrIBGE : ACBrComponentConsulta
 	{
 		#region Fields
 
@@ -97,7 +96,7 @@ namespace ACBr.Net.Consulta
 		/// <param name="exata">if set to <c>true</c> [exata].</param>
 		/// <param name="caseSentive">if set to <c>true</c> [case sentive].</param>
 		/// <returns>System.Int32.</returns>
-		public int BuscarPorNome(string municipio, string uf = "", bool exata = false, bool caseSentive = false)
+		public int BuscarPorNome(string municipio, ConsultaUF? uf = null, bool exata = false, bool caseSentive = false)
 		{
 			Guard.Against<ArgumentException>(municipio.IsEmpty(), "Município deve ser informado");
 
@@ -106,9 +105,9 @@ namespace ACBr.Net.Consulta
 
 			ProcessarResposta(retorno);
 
-			if (!uf.IsEmpty())
+			if (uf.HasValue)
 			{
-				Resultados.RemoveAll(x => x.UF != uf.ToUpper());
+				Resultados.RemoveAll(x => x.UF != uf);
 			}
 
 			if (exata)
@@ -137,7 +136,7 @@ namespace ACBr.Net.Consulta
 				if (pos <= 0) return;
 
 				buffer = buffer.Substring(pos, buffer.Length - pos);
-				buffer = buffer.StringEntreString("<table ", "</table>");
+				buffer = buffer.GetStrBetween("<table ", "</table>");
 
 				var rows = Regex.Matches(buffer, @"(?<1><TR[^>]*>\s*<td.*?</tr>)", RegexOptions.Singleline | RegexOptions.IgnoreCase)
 								.Cast<Match>()
@@ -156,7 +155,7 @@ namespace ACBr.Net.Consulta
 					var municipio = new ACBrMunicipio
 					{
 						CodigoUF = columns[0].ToInt32(),
-						UF = columns[1].ToUpper(),
+						UF = (ConsultaUF)Enum.Parse(typeof(ConsultaUF), columns[1].ToUpper()),
 						Codigo = columns[2].ToInt32(),
 						Nome = columns[3].ToTitleCase(),
 						Area = columns[4].ToDecimal()
