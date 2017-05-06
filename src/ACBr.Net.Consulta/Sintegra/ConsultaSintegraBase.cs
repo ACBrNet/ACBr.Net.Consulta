@@ -83,7 +83,7 @@ namespace ACBr.Net.Consulta.Sintegra
         {
             var webRequest = (HttpWebRequest)WebRequest.Create(url);
             webRequest.CookieContainer = cookies;
-            webRequest.ProtocolVersion = HttpVersion.Version10;
+            webRequest.ProtocolVersion = HttpVersion.Version11;
             webRequest.UserAgent = "Mozilla/4.0 (compatible; Synapse)";
 
             webRequest.KeepAlive = true;

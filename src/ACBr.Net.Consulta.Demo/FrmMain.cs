@@ -45,7 +45,25 @@ namespace ACBr.Net.Consulta.Demo
 
         private void procurarSintegraCnpjButton_Click(object sender, EventArgs e)
         {
+            LimparCamposSintegra();
             ProcurarSintegra();
+            
+        }
+
+        private void LimparCamposSintegra()
+        {
+            razaoSocialSintegraTextBox.Text = String.Empty;
+            dataAberturaSintegraTextBox.Text = String.Empty;
+            cnpjSintegraTextBox.Text = String.Empty;
+            ieSintegraTextBox.Text = String.Empty;
+            logradouroSintegraTextBox.Text = String.Empty;
+            numeroSintegraTextBox.Text = String.Empty;
+            complementoSintegraTextBox.Text = String.Empty;
+            bairroSintegraTextBox.Text = String.Empty;
+            municipioSintegraTextBox.Text = String.Empty;
+            ufSintegraTextBox.Text = String.Empty;
+            cepSintegraTextBox.Text = String.Empty;
+            situacaoSintegraTextBox.Text = String.Empty;
         }
 
         private void procurarIbgeCodigoButton_Click(object sender, EventArgs e)
@@ -98,7 +116,11 @@ namespace ACBr.Net.Consulta.Demo
         private void acbrConsultaSintegra_OnGetCaptcha(object sender, CaptchaEventArgs e)
         {
             var uf = (ConsultaUF)ufSintegraComboBox.SelectedItem;
-            e.Captcha = FrmCaptcha.GetCaptcha(this, () => acbrConsultaSintegra.GetCaptcha(uf));
+            if (uf != ConsultaUF.GO)
+            {
+                e.Captcha = FrmCaptcha.GetCaptcha(this, () => acbrConsultaSintegra.GetCaptcha(uf));
+            }
+            
         }
 
         private void acbrIbge_OnBuscaEfetuada(object sender, EventArgs eventArgs)
@@ -162,8 +184,13 @@ namespace ACBr.Net.Consulta.Demo
 
         private void ProcurarSintegra()
         {
+            //
             var uf = (ConsultaUF)ufSintegraComboBox.SelectedItem;
-            var cnpj = cnpjSintegraMaskedTextBox.Text;
+            var cnpj = String.Empty;
+            if (cnpjSintegraMaskedTextBox.Text != "  .   .   /    -")
+            {
+                cnpj = cnpjSintegraMaskedTextBox.Text;
+            } 
             var ie = inscricaoSintegraTextBox.Text;
 
             var primaryTask = Task<ACBrEmpresa>.Factory.StartNew(() => acbrConsultaSintegra.Consulta(uf, cnpj, ie));

@@ -100,6 +100,7 @@ namespace ACBr.Net.Consulta.Sintegra
             {
                 case ConsultaUF.SP: return ConsultaSintegraSP.Instance;
                 case ConsultaUF.MS: return ConsultaSintegraMS.Instance;
+                case ConsultaUF.GO: return ConsultaSintegraGO.Instance;
                 default: throw new NotImplementedException("Consulta para este estado não implementado.");
             }
         }
