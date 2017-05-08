@@ -93,7 +93,7 @@ namespace ACBr.Net.Consulta.Sintegra
 
 		protected string GetHtmlResponse(WebResponse response)
 		{
-			return GetHtmlResponse(response, Encoding.GetEncoding("ISO-8859-1"));
+			return GetHtmlResponse(response, ACBrEncoding.ISO88591);
 		}
 
 		protected string GetHtmlResponse(WebResponse response, Encoding enconder)

@@ -54,7 +54,8 @@
     <Compile Include="ACBrComponentConsulta.cs">
       <SubType>ACBr.Net</SubType>
     </Compile>
-    <Compile Include="ConsultUFExtensions.cs" />
+    <Compile Include="ACBrEncoding.cs" />
+    <Compile Include="ConsultaUFExtensions.cs" />
     <Compile Include="Sintegra\ConsultaSintegraBase.cs" />
     <Compile Include="CaptchaEventArgs.cs" />
     <Compile Include="CEP\CEPWebService.cs" />

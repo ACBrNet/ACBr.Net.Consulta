@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ACBr.Net.Consulta.CEP;
-using ACBr.Net.Core.Exceptions;
 using ACBr.Net.Core.Extensions;
 
 namespace ACBr.Net.Consulta.Demo

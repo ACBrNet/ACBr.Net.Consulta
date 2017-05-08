@@ -36,7 +36,7 @@ namespace ACBr.Net.Consulta
 	/// <summary>
 	/// Classe com metodos de extensão para o Enum ConsultaUF
 	/// </summary>
-	public static class ConsultUFExtensions
+	public static class ConsultaUFExtensions
 	{
 		#region Fields
 

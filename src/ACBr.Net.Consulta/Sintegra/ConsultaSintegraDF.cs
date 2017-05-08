@@ -74,7 +74,7 @@ namespace ACBr.Net.Consulta.Sintegra
 				postData.Append("sefp=1&estado=DF&identificador=2&argumento=" + cnpj);
 			}
 
-			var byteArray = Encoding.GetEncoding("ISO-8859-1").GetBytes(postData.ToString());
+			var byteArray = ACBrEncoding.ISO88591.GetBytes(postData.ToString());
 			request.ContentType = "application/x-www-form-urlencoded";
 			request.ContentLength = byteArray.Length;
 
@@ -95,7 +95,7 @@ namespace ACBr.Net.Consulta.Sintegra
 				var postData2 = new StringBuilder();
 				postData2.Append("cCFDF=" + cfdf);
 
-				var byteArray2 = Encoding.GetEncoding("utf-8").GetBytes(postData2.ToString());
+				var byteArray2 = Encoding.UTF8.GetBytes(postData2.ToString());
 				request.ContentType = "application/x-www-form-urlencoded";
 				request.ContentLength = byteArray2.Length;
 
@@ -103,7 +103,7 @@ namespace ACBr.Net.Consulta.Sintegra
 				dataStream2.Write(byteArray2, 0, byteArray2.Length);
 				dataStream2.Close();
 
-				retorno = GetHtmlResponse(request.GetResponse(), Encoding.GetEncoding("utf-8"));
+				retorno = GetHtmlResponse(request.GetResponse(), Encoding.UTF8);
 			}
 
 			Guard.Against<ACBrCaptchaException>(retorno.Contains("O Texto digitado não confere com a Imagem"), "O Texto digitado não confere com a Imagem.");

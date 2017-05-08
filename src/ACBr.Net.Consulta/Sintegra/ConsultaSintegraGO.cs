@@ -79,7 +79,7 @@ namespace ACBr.Net.Consulta.Sintegra
 				postData.Append("&tCPF=&btCGC=Consultar&zion.SystemAction=consultarSintegra%28%29&zion.OnSubmited=&zion.FormElementPosted=zionFormID_1&zionPostMethod=&zionRichValidator=true");
 			}
 
-			var byteArray = Encoding.GetEncoding("ISO-8859-1").GetBytes(postData.ToString());
+			var byteArray = ACBrEncoding.ISO88591.GetBytes(postData.ToString());
 			request.ContentType = "application/x-www-form-urlencoded";
 			request.ContentLength = byteArray.Length;
 

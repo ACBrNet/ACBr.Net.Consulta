@@ -105,7 +105,7 @@ namespace ACBr.Net.Consulta.Sintegra
 				postData.Append("botao=Consulta+por+CNPJ&ie=");
 			}
 
-			var byteArray = Encoding.GetEncoding("ISO-8859-1").GetBytes(postData.ToString());
+			var byteArray = ACBrEncoding.ISO88591.GetBytes(postData.ToString());
 			request.ContentType = "application/x-www-form-urlencoded";
 			request.ContentLength = byteArray.Length;
 
