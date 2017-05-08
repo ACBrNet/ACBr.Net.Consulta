@@ -3,10 +3,10 @@
 // Author           : RFTD
 // Created          : 02-20-2017
 //
-// Last Modified By : RFTD
-// Last Modified On : 02-20-2017
-// ***********************************************************************
-// <copyright file="ConsultaSintegraMS.cs" company="ACBr.Net">
+// Last Modified By : Regis Araujo
+// Last Modified On : 05-07-2017
+// *********************************************************************
+// <copyright file="ConsultaUF.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2017 Grupo ACBr.Net
 //
@@ -31,35 +31,149 @@
 
 namespace ACBr.Net.Consulta
 {
-    public enum ConsultaUF
-    {
-        AC = 12,
-        AL = 27,
-        AM = 13,
-        AP = 16,
-        BA = 29,
-        CE = 23,
-        DF = 53,
-        ES = 32,
-        GO = 52,
-        MA = 21,
-        MG = 31,
-        MS = 50,
-        MT = 51,
-        PA = 15,
-        PB = 25,
-        PE = 26,
-        PI = 22,
-        PR = 41,
-        RJ = 33,
-        RN = 24,
-        RO = 11,
-        RR = 14,
-        RS = 43,
-        SC = 42,
-        SE = 28,
-        SP = 35,
-        TO = 17,
-        AN = 91
-    }
+	/// <summary>
+	///
+	/// </summary>
+	public enum ConsultaUF
+	{
+		/// <summary>
+		/// Acre
+		/// </summary>
+		AC = 12,
+
+		/// <summary>
+		/// Alagoas
+		/// </summary>
+		AL = 27,
+
+		/// <summary>
+		/// Amazonas
+		/// </summary>
+		AM = 13,
+
+		/// <summary>
+		/// Amapá
+		/// </summary>
+		AP = 16,
+
+		/// <summary>
+		/// Bahia
+		/// </summary>
+		BA = 29,
+
+		/// <summary>
+		/// Ceará
+		/// </summary>
+		CE = 23,
+
+		/// <summary>
+		/// Distrito Federal
+		/// </summary>
+		DF = 53,
+
+		/// <summary>
+		/// Espírito Santo
+		/// </summary>
+		ES = 32,
+
+		/// <summary>
+		/// Goiás
+		/// </summary>
+		GO = 52,
+
+		/// <summary>
+		/// Maranhão
+		/// </summary>
+		MA = 21,
+
+		/// <summary>
+		/// Minas Gerais
+		/// </summary>
+		MG = 31,
+
+		/// <summary>
+		/// Mato Grosso do Sul
+		/// </summary>
+		MS = 50,
+
+		/// <summary>
+		/// Mato Grosso
+		/// </summary>
+		MT = 51,
+
+		/// <summary>
+		/// Pará
+		/// </summary>
+		PA = 15,
+
+		/// <summary>
+		/// Paraíba
+		/// </summary>
+		PB = 25,
+
+		/// <summary>
+		/// Pernambuco
+		/// </summary>
+		PE = 26,
+
+		/// <summary>
+		/// Piauí
+		/// </summary>
+		PI = 22,
+
+		/// <summary>
+		/// Paraná
+		/// </summary>
+		PR = 41,
+
+		/// <summary>
+		/// Rio de Janeiro
+		/// </summary>
+		RJ = 33,
+
+		/// <summary>
+		/// Rio Grande do Norte
+		/// </summary>
+		RN = 24,
+
+		/// <summary>
+		/// Rondônia
+		/// </summary>
+		RO = 11,
+
+		/// <summary>
+		/// Roraima
+		/// </summary>
+		RR = 14,
+
+		/// <summary>
+		/// Rio Grande do Sul
+		/// </summary>
+		RS = 43,
+
+		/// <summary>
+		/// Santa Catarina
+		/// </summary>
+		SC = 42,
+
+		/// <summary>
+		/// Sergipe
+		/// </summary>
+		SE = 28,
+
+		/// <summary>
+		/// São Paulo
+		/// </summary>
+		SP = 35,
+
+		/// <summary>
+		/// Tocantins
+		/// </summary>
+		TO = 17,
+
+		/// <summary>
+		/// NA
+		/// </summary>
+		AN = 91
+	}
 }
