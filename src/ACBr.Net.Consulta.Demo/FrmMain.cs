@@ -100,8 +100,6 @@ namespace ACBr.Net.Consulta.Demo
 		private void acbrConsultaSintegra_OnGetCaptcha(object sender, CaptchaEventArgs e)
 		{
 			var uf = (ConsultaUF)ufSintegraComboBox.SelectedItem;
-			if (uf.IsIn(ConsultaUF.DF, ConsultaUF.GO)) return;
-
 			e.Captcha = FrmCaptcha.GetCaptcha(this, () => acbrConsultaSintegra.GetCaptcha(uf));
 		}
 
@@ -184,7 +182,7 @@ namespace ACBr.Net.Consulta.Demo
 				return;
 			}
 
-			if (!ie.IsEmpty() && ie.IsIE(uf.ToString()))
+			if (!ie.IsEmpty() && !ie.IsIE(uf.Sigla()))
 			{
 				MessageBox.Show(this, "IE informado não é valido.", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 				return;

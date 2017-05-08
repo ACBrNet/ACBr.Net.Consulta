@@ -35,6 +35,12 @@ namespace ACBr.Net.Consulta.Sintegra
 {
 	internal interface IConsultaSintegra
 	{
+		#region Properties
+
+		bool HasCaptcha { get; }
+
+		#endregion Properties
+
 		#region Methods
 
 		Image GetCaptcha();

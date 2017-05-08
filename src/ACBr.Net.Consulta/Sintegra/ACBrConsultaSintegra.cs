@@ -77,7 +77,7 @@ namespace ACBr.Net.Consulta.Sintegra
 
 			var consultaSintegra = GetConsulta(uf);
 
-			if (captcha.IsEmpty() && OnGetCaptcha != null)
+			if (captcha.IsEmpty() && OnGetCaptcha != null && consultaSintegra.HasCaptcha)
 			{
 				var e = new CaptchaEventArgs();
 				OnGetCaptcha.Raise(this, e);
@@ -85,6 +85,7 @@ namespace ACBr.Net.Consulta.Sintegra
 				captcha = e.Captcha;
 			}
 
+			Guard.Against<ACBrCaptchaException>(captcha.IsEmpty() && consultaSintegra.HasCaptcha, "O captcha não pode ser vazio.");
 			return consultaSintegra.Consulta(cnpj, ie, captcha);
 		}
 

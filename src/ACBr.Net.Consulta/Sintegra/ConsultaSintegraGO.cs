@@ -52,6 +52,15 @@ namespace ACBr.Net.Consulta.Sintegra
 
 		#endregion Fields
 
+		#region Constructors
+
+		public ConsultaSintegraGO()
+		{
+			HasCaptcha = false;
+		}
+
+		#endregion Constructors
+
 		#region Methods
 
 		public override Image GetCaptcha()

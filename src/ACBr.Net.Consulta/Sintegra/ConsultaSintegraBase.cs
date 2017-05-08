@@ -56,6 +56,7 @@ namespace ACBr.Net.Consulta.Sintegra
 		{
 			cookies = new CookieContainer();
 			urlParams = new Dictionary<string, string>();
+			HasCaptcha = true;
 		}
 
 		#endregion Constructors
@@ -63,6 +64,8 @@ namespace ACBr.Net.Consulta.Sintegra
 		#region Properties
 
 		public static T Instance => instance ?? (instance = Activator.CreateInstance<T>());
+
+		public bool HasCaptcha { get; protected set; }
 
 		#endregion Properties
 
