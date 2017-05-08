@@ -49,7 +49,9 @@ namespace ACBr.Net.Consulta.Sintegra
     public sealed class ACBrConsultaSintegra : ACBrComponent
     {
         #region Events
-
+        /// <summary>
+        /// 
+        /// </summary>
         public event EventHandler<CaptchaEventArgs> OnGetCaptcha;
 
         #endregion Events
@@ -100,6 +102,8 @@ namespace ACBr.Net.Consulta.Sintegra
             {
                 case ConsultaUF.SP: return ConsultaSintegraSP.Instance;
                 case ConsultaUF.MS: return ConsultaSintegraMS.Instance;
+                case ConsultaUF.GO: return ConsultaSintegraGO.Instance;
+                case ConsultaUF.DF: return ConsultaSintegraDF.Instance;
                 default: throw new NotImplementedException("Consulta para este estado não implementado.");
             }
         }
@@ -107,11 +111,15 @@ namespace ACBr.Net.Consulta.Sintegra
         #endregion Private Methods
 
         #region Protected Methods
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected override void OnInitialize()
         {
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected override void OnDisposing()
         {
         }

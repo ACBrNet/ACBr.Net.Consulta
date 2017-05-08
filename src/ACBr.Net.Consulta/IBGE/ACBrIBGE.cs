@@ -56,13 +56,17 @@ namespace ACBr.Net.Consulta.IBGE
 		#endregion Fields
 
 		#region Events
-
+        /// <summary>
+        /// 
+        /// </summary>
 		public event EventHandler<EventArgs> OnBuscaEfetuada;
 
 		#endregion Events
 
 		#region Properties
-
+        /// <summary>
+        /// 
+        /// </summary>
 		public List<ACBrMunicipio> Resultados { get; private set; }
 
 		#endregion Properties
@@ -173,7 +177,9 @@ namespace ACBr.Net.Consulta.IBGE
 		#endregion Private Methods
 
 		#region Protected Method
-
+        /// <summary>
+        /// 
+        /// </summary>
 		protected override void OnInitialize()
 		{
 			Resultados = new List<ACBrMunicipio>();

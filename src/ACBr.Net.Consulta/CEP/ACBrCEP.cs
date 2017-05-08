@@ -29,13 +29,12 @@
 // <summary></summary>
 // ***********************************************************************
 
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using ACBr.Net.Consulta.Sintegra;
 using ACBr.Net.Core;
 using ACBr.Net.Core.Exceptions;
 using ACBr.Net.Core.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
 
 namespace ACBr.Net.Consulta.CEP
 {

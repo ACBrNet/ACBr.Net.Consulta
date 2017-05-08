@@ -33,10 +33,15 @@ using System;
 
 namespace ACBr.Net.Consulta
 {
+    /// <summary>
+    /// 
+    /// </summary>
 	public sealed class CaptchaEventArgs : EventArgs
 	{
 		#region Constructors
-
+        /// <summary>
+        /// 
+        /// </summary>
 		public CaptchaEventArgs()
 		{
 		}
@@ -44,7 +49,9 @@ namespace ACBr.Net.Consulta
 		#endregion Constructors
 
 		#region Proprieties
-
+        /// <summary>
+        /// 
+        /// </summary>
 		public string Captcha { get; set; }
 
 		#endregion Proprieties

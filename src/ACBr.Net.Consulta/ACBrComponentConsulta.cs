@@ -45,7 +45,9 @@ namespace ACBr.Net.Consulta
     public abstract class ACBrComponentConsulta : ACBrComponent
     {
         #region Field
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected CookieContainer cookies;
 
         #endregion Field
@@ -53,12 +55,16 @@ namespace ACBr.Net.Consulta
         #region Method
 
         #region Protected Method
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
         protected virtual HttpWebRequest GetClient(string url)
         {
             var webRequest = (HttpWebRequest)WebRequest.Create(url);
             webRequest.CookieContainer = cookies;
-            webRequest.ProtocolVersion = HttpVersion.Version10;
+            webRequest.ProtocolVersion = HttpVersion.Version11;
             webRequest.UserAgent = "Mozilla/4.0 (compatible; Synapse)";
 
             webRequest.KeepAlive = true;
@@ -66,12 +72,21 @@ namespace ACBr.Net.Consulta
 
             return webRequest;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="response"></param>
+        /// <returns></returns>
         protected virtual string GetHtmlResponse(WebResponse response)
         {
             return GetHtmlResponse(response, Encoding.GetEncoding("ISO-8859-1"));
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="response"></param>
+        /// <param name="enconder"></param>
+        /// <returns></returns>
         protected virtual string GetHtmlResponse(WebResponse response, Encoding enconder)
         {
             Guard.Against<ACBrException>(response.IsNull(), "Erro ao acessar o site.");
@@ -84,12 +99,16 @@ namespace ACBr.Net.Consulta
 
             return retorno;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected override void OnInitialize()
         {
             cookies = new CookieContainer();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected override void OnDisposing()
         {
         }

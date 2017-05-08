@@ -36,22 +36,41 @@ namespace ACBr.Net.Consulta
     /// </summary>
     public sealed class ACBrEndereco
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public string CEP { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public string TipoLogradouro { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public string Logradouro { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public string Complemento { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public string Bairro { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public string Municipio { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public ConsultaUF UF { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public string IBGEMunicipio { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public string IBGEUF { get; set; }
     }
 }

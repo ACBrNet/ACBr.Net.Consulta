@@ -1,5 +1,4 @@
-﻿using ACBr.Net.Consulta.IBGE;
-using ACBr.Net.Consulta.Receita;
+﻿
 
 namespace ACBr.Net.Consulta.Demo
 {
@@ -1050,7 +1049,7 @@ namespace ACBr.Net.Consulta.Demo
             // 
             this.cnpjSintegraMaskedTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cnpjSintegraMaskedTextBox.Location = new System.Drawing.Point(91, 23);
-            this.cnpjSintegraMaskedTextBox.Mask = "00.000.000\\/0000-00";
+            this.cnpjSintegraMaskedTextBox.Mask = "00,000,000\\/0000-00";
             this.cnpjSintegraMaskedTextBox.Name = "cnpjSintegraMaskedTextBox";
             this.cnpjSintegraMaskedTextBox.Size = new System.Drawing.Size(156, 26);
             this.cnpjSintegraMaskedTextBox.TabIndex = 9;
@@ -1516,9 +1515,9 @@ namespace ACBr.Net.Consulta.Demo
 		private System.Windows.Forms.Label label28;
 		private System.Windows.Forms.GroupBox groupBox5;
 		private System.Windows.Forms.DataGridView ibgeDataGridView;
-		private ACBrConsultaCPF acbrCpf;
-		private ACBrIBGE acbrIbge;
-		private ACBrConsultaCNPJ acbrCnpj;
+		private Receita.ACBrConsultaCPF acbrCpf;
+		private IBGE.ACBrIBGE acbrIbge;
+		private Receita.ACBrConsultaCNPJ acbrCnpj;
 		private CEP.ACBrCEP acbrCEP;
 		private Sintegra.ACBrConsultaSintegra acbrConsultaSintegra;
 		private System.Windows.Forms.TabPage sintegraTabPage;

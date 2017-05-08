@@ -31,16 +31,30 @@
 
 namespace ACBr.Net.Consulta
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class ACBrMunicipio
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public int Codigo { get; internal set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public string Nome { get; internal set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public ConsultaUF UF { get; internal set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public int CodigoUF { get; internal set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public decimal Area { get; internal set; }
     }
 }

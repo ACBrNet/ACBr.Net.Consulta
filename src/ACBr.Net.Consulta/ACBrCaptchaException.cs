@@ -34,7 +34,10 @@ using System.Runtime.Serialization;
 
 namespace ACBr.Net.Consulta
 {
-	public class ACBrCaptchaException : ApplicationException
+    /// <summary>
+    /// 
+    /// </summary>
+    public class ACBrCaptchaException : ApplicationException
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:ACBr.Net.Core.ACBrException" /> class with a specified error message.

@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ACBr.Net.Consulta.CEP;
-using ACBr.Net.Consulta.Sintegra;
 using ACBr.Net.Core.Extensions;
+using ACBr.Net.Consulta.Validacoes;
 
 namespace ACBr.Net.Consulta.Demo
 {
@@ -30,12 +29,22 @@ namespace ACBr.Net.Consulta.Demo
             cnpjMaskedTextBox.Focus();
             webserviceCepComboBox.EnumDataSource<CEPWebService>(CEPWebService.None);
             ufCepComboBox.EnumDataSource<ConsultaUF>(ConsultaUF.MS);
-            ufSintegraComboBox.EnumDataSource<ConsultaUF>(ConsultaUF.MS);
+            ufSintegraComboBox.EnumDataSource<ConsultaUF>(ConsultaUF.DF);
+            cnpjSintegraMaskedTextBox.Text = "45543915027977";
         }
 
         private void procurarCnpjButton_Click(object sender, EventArgs e)
         {
-            ProcurarCNPJ();
+            
+            if (new CNPJ(cnpjMaskedTextBox.Text).IsValid())
+            {
+                ProcurarCNPJ();
+            }
+            else
+            {
+                MessageBox.Show("CNPJ informado não é valido.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+            }
+            
         }
 
         private void procurarCpfButton_Click(object sender, EventArgs e)
@@ -45,7 +54,24 @@ namespace ACBr.Net.Consulta.Demo
 
         private void procurarSintegraCnpjButton_Click(object sender, EventArgs e)
         {
+            LimparCamposSintegra();
             ProcurarSintegra();
+        }
+
+        private void LimparCamposSintegra()
+        {
+            razaoSocialSintegraTextBox.Text = String.Empty;
+            dataAberturaSintegraTextBox.Text = String.Empty;
+            cnpjSintegraTextBox.Text = String.Empty;
+            ieSintegraTextBox.Text = String.Empty;
+            logradouroSintegraTextBox.Text = String.Empty;
+            numeroSintegraTextBox.Text = String.Empty;
+            complementoSintegraTextBox.Text = String.Empty;
+            bairroSintegraTextBox.Text = String.Empty;
+            municipioSintegraTextBox.Text = String.Empty;
+            ufSintegraTextBox.Text = String.Empty;
+            cepSintegraTextBox.Text = String.Empty;
+            situacaoSintegraTextBox.Text = String.Empty;
         }
 
         private void procurarIbgeCodigoButton_Click(object sender, EventArgs e)
@@ -98,7 +124,17 @@ namespace ACBr.Net.Consulta.Demo
         private void acbrConsultaSintegra_OnGetCaptcha(object sender, CaptchaEventArgs e)
         {
             var uf = (ConsultaUF)ufSintegraComboBox.SelectedItem;
-            e.Captcha = FrmCaptcha.GetCaptcha(this, () => acbrConsultaSintegra.GetCaptcha(uf));
+            switch (uf)
+            {
+                case ConsultaUF.DF: // sintegra DF nao possui captcha
+                    break;
+                case ConsultaUF.GO: // sintegra GO nao possui captcha
+                    break;                
+                default:
+                    e.Captcha = FrmCaptcha.GetCaptcha(this, () => acbrConsultaSintegra.GetCaptcha(uf));
+                    break;
+            }
+            
         }
 
         private void acbrIbge_OnBuscaEfetuada(object sender, EventArgs eventArgs)
@@ -162,9 +198,33 @@ namespace ACBr.Net.Consulta.Demo
 
         private void ProcurarSintegra()
         {
+            var cnpj = String.Empty;
+            var ie = string.Empty;
             var uf = (ConsultaUF)ufSintegraComboBox.SelectedItem;
-            var cnpj = cnpjSintegraMaskedTextBox.Text;
-            var ie = inscricaoSintegraTextBox.Text;
+            cnpjSintegraMaskedTextBox.TextMaskFormat = MaskFormat.ExcludePromptAndLiterals;
+            if (cnpjSintegraMaskedTextBox.Text != String.Empty)
+            {
+                if (new CNPJ(cnpjSintegraMaskedTextBox.Text).IsValid())
+                {
+                    cnpj = cnpjSintegraMaskedTextBox.Text;
+                }
+                else
+                {
+                    MessageBox.Show("CNPJ informado não é valido.");
+                }
+            }
+            
+            if (inscricaoSintegraTextBox.Text != String.Empty)
+            {
+                if (new IE(inscricaoSintegraTextBox.Text, (ConsultaUF)ufSintegraComboBox.SelectedItem).IsValid())
+                {
+                    ie = inscricaoSintegraTextBox.Text;
+                }
+                else
+                {
+                    MessageBox.Show("CNPJ informado não é valido.");
+                }
+            }
 
             var primaryTask = Task<ACBrEmpresa>.Factory.StartNew(() => acbrConsultaSintegra.Consulta(uf, cnpj, ie));
             primaryTask.ContinueWith(task =>
