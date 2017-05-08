@@ -31,10 +31,22 @@
 
 namespace ACBr.Net.Consulta.CEP
 {
+    /// <summary>
+    /// 
+    /// </summary>
 	public enum CEPWebService
 	{
+        /// <summary>
+        /// 
+        /// </summary>
 		None,
+        /// <summary>
+        /// 
+        /// </summary>
 		Correios,
+        /// <summary>
+        /// 
+        /// </summary>
 		ViaCep
 	}
 }

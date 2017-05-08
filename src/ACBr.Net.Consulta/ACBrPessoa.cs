@@ -37,6 +37,9 @@ using ACBr.Net.Core.Extensions;
 
 namespace ACBr.Net.Consulta
 {
+    /// <summary>
+    /// 
+    /// </summary>
 	public sealed class ACBrPessoa
 	{
 		#region Constructors

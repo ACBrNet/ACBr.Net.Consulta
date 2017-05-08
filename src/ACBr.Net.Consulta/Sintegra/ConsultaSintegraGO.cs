@@ -33,10 +33,9 @@ using ACBr.Net.Core.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Net;
 using System.Text;
-using System.Web;
+using System.Text.RegularExpressions;
 
 namespace ACBr.Net.Consulta.Sintegra
 {
@@ -60,8 +59,6 @@ namespace ACBr.Net.Consulta.Sintegra
         
         public override ACBrEmpresa Consulta(string cnpj, string ie, string captcha)
         {
-            //rTipoDoc=2&tDoc=19.529.644%2F0001-08&tCCE=&tCNPJ=19.529.644%2F0001-08&tCPF=&btCGC=Consultar&zion.SystemAction=consultarSintegra%28%29&zion.OnSubmited=&zion.FormElementPosted=zionFormID_1&zionPostMethod=&zionRichValidator=true
-            //rTipoDoc=1&tDoc=10.588.548-7&tCCE=10.588.548-7&tCNPJ=&tCPF=&btCGC=Consultar&zion.SystemAction=consultarSintegra%28%29&zion.OnSubmited=&zion.FormElementPosted=zionFormID_1&zionPostMethod=&zionRichValidator=true
             var request = GetClient(URL_CONSULTA);
             request.Method = "POST";
             var postData = new StringBuilder();
@@ -101,7 +98,18 @@ namespace ACBr.Net.Consulta.Sintegra
 
         #region Private Methods
 
-        private static ACBrEmpresa ProcessResponse(string retorno)
+        private static List<string> GetContents(string entrada, string regex)
+        {
+            MatchCollection padrao = Regex.Matches(entrada, regex, RegexOptions.Multiline | RegexOptions.Singleline | RegexOptions.IgnoreCase);
+            List<string> conteudo = new List<string>();
+            foreach (Match match in padrao)
+            {
+                conteudo.Add(match.Value);
+            }
+            return conteudo;
+        }
+
+        private static ACBrEmpresa ProcessResponse2(string retorno)
         {
             var result = new ACBrEmpresa();
 
@@ -137,6 +145,73 @@ namespace ACBr.Net.Consulta.Sintegra
 
             return result;
         }
+        private static List<string> ProcessTableHtml(string retorno)
+        {
+            const string TableExpression = "<table.*?>(.*?)</table>";
+            const string tr_pattern = "<tr(.*?)</tr>";
+            const string td_pattern = "<td.*?>(.*?)</td>";
+            var dadosRetorno = new List<string>();
+            List<string> tableContents = GetContents(retorno, TableExpression);
+            foreach (string tableContent in tableContents)
+            {
+                List<string> trContents = GetContents(tableContent, tr_pattern);
+                foreach (string trContent in trContents)
+                {
+                    List<string> tdContents = GetContents(trContent, td_pattern);
+                    foreach (string item in tdContents)
+                    {
+                        //dadosRetorno.AddText((Regex.Replace(item, "<.*?>", String.Empty).Trim()));
+                        //dadosRetorno.AddText(WebUtility.HtmlDecode(item.StripHtml().Replace("&nbsp;", Environment.NewLine)).Trim());
+                        dadosRetorno.AddText(WebUtility.HtmlDecode(item.StripHtml().Replace("&nbsp;", String.Empty)).Trim());
+                        dadosRetorno.RemoveEmptyLines();
+                    }
+                }
+            }
+            return dadosRetorno;
+        }
+
+        /// <summary>
+        /// Processa o retorno html e retorno o objeto tipo ACBrEmpresa com dados
+        /// </summary>
+        /// <param name="retorno"></param>
+        /// <returns>objeto tipo ACBrEmpresa</returns>
+        private static ACBrEmpresa ProcessResponse(string retorno)
+        {
+            var result = new ACBrEmpresa();
+            var dadosRetorno = ProcessTableHtml(retorno);
+            try
+            {
+                result.CNPJ = LerCampo(dadosRetorno, "CNPJ:");
+                result.InscricaoEstadual = LerCampo(dadosRetorno, "Inscrição Estadual - CCE :");
+                result.RazaoSocial = LerCampo(dadosRetorno, "Nome Empresarial:");
+                result.Logradouro = LerCampo(dadosRetorno, "Logradouro:");
+                result.Numero = LerCampo(dadosRetorno, "Número:");
+                result.Complemento = LerCampo(dadosRetorno, "Complemento:");
+
+                var dadosRetorno2 = new List<string>();
+                dadosRetorno2.AddText(WebUtility.HtmlDecode(retorno.StripHtml().Replace("&nbsp;", Environment.NewLine)).Trim());
+                dadosRetorno2.RemoveEmptyLines();
+                result.Bairro = LerCampo(dadosRetorno2, "Bairro:");
+                dadosRetorno2 = null;
+
+                result.Municipio = LerCampo(dadosRetorno, "Município:");
+                result.UF = (ConsultaUF)Enum.Parse(typeof(ConsultaUF), LerCampo(dadosRetorno, "UF:").ToUpper());
+                result.CEP = LerCampo(dadosRetorno, "CEP:").FormataCEP();
+                result.Telefone = LerCampo(dadosRetorno, "Telefone:");
+                result.AtividadeEconomica = LerCampo(dadosRetorno, "Atividade Principal");
+                result.DataAbertura = LerCampo(dadosRetorno, "Data de Cadastramento:").ToData();
+                result.Situacao = LerCampo(dadosRetorno, "Situação Cadastral Vigente:");
+                result.DataSituacao = LerCampo(dadosRetorno, "Data desta Situação Cadastral:").ToData();
+                result.RegimeApuracao = LerCampo(dadosRetorno, "Regime de Apuração:");
+                result.DataEmitenteNFe = LerCampo(dadosRetorno, "Emitente de NFe desde:").ToData();
+            }
+            catch (Exception exception)
+            {
+                throw new ACBrException(exception, "Erro ao processar retorno.");
+            }
+
+            return result;
+        }
 
         private static string LerCampo(IList<string> retorno, string campo)
         {
@@ -147,13 +222,6 @@ namespace ACBr.Net.Consulta.Sintegra
                 var linha = retorno[i].Trim();
                 if (linha != campo) continue;
 
-                if (campo == "Logradouro:")
-                {
-                    ret = retorno[i + 1].Trim().Replace("&nbsp;", string.Empty);
-                    log = retorno[i + 2].Trim().Replace("&nbsp;", string.Empty);
-                    ret = ret + " " + log;
-                    break;
-                }
                 ret = retorno[i + 1].Trim().Replace("&nbsp;", string.Empty);
                 retorno.RemoveAt(i);
                 break;

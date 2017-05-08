@@ -1,5 +1,4 @@
-﻿using ACBr.Net.Consulta.IBGE;
-using ACBr.Net.Consulta.Receita;
+﻿
 
 namespace ACBr.Net.Consulta.Demo
 {
@@ -1516,9 +1515,9 @@ namespace ACBr.Net.Consulta.Demo
 		private System.Windows.Forms.Label label28;
 		private System.Windows.Forms.GroupBox groupBox5;
 		private System.Windows.Forms.DataGridView ibgeDataGridView;
-		private ACBrConsultaCPF acbrCpf;
-		private ACBrIBGE acbrIbge;
-		private ACBrConsultaCNPJ acbrCnpj;
+		private Receita.ACBrConsultaCPF acbrCpf;
+		private IBGE.ACBrIBGE acbrIbge;
+		private Receita.ACBrConsultaCNPJ acbrCnpj;
 		private CEP.ACBrCEP acbrCEP;
 		private Sintegra.ACBrConsultaSintegra acbrConsultaSintegra;
 		private System.Windows.Forms.TabPage sintegraTabPage;

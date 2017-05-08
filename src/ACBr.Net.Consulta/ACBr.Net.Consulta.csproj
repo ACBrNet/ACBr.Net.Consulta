@@ -80,12 +80,22 @@
     </Compile>
     <Compile Include="ACBrMunicipio.cs" />
     <Compile Include="ACBrPessoa.cs" />
+    <Compile Include="Sintegra\ConsultaSintegraDF.cs" />
     <Compile Include="Sintegra\ConsultaSintegraGO.cs" />
     <Compile Include="Sintegra\ConsultaSintegraMS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ConsultaUF.cs" />
     <Compile Include="Sintegra\ConsultaSintegraSP.cs" />
     <Compile Include="Sintegra\IConsultaSintegra.cs" />
+    <Compile Include="Validacoes\CNPJ.cs" />
+    <Compile Include="Validacoes\CNPJValidator.cs" />
+    <Compile Include="Validacoes\DigitoVerificador.cs" />
+    <Compile Include="Validacoes\IE.cs" />
+    <Compile Include="Validacoes\IEValidator.cs" />
+    <Compile Include="Validacoes\IEValid\IEAcreValidator.cs" />
+    <Compile Include="Validacoes\IEValid\IEDistritoFederalValidator.cs" />
+    <Compile Include="Validacoes\IEValid\IEGoiasValidator.cs" />
+    <Compile Include="Validacoes\IEValid\IIEValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ACBrConsultaCNPJ.bmp" />
@@ -103,6 +113,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
