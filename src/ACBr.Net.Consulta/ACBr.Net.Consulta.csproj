@@ -33,14 +33,15 @@
     <DocumentationFile>..\..\bin\Release\ACBr.Net.Consulta.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ACBr.Net.Core, Version=1.0.1.6, Culture=neutral, PublicKeyToken=d3bb9130f8b775a6, processorArchitecture=MSIL">
-      <HintPath>..\packages\ACBr.Net.Core.1.0.1.6\lib\net40\ACBr.Net.Core.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="ACBr.Net.Core, Version=1.0.1.7, Culture=neutral, PublicKeyToken=d3bb9130f8b775a6, processorArchitecture=MSIL">
+      <HintPath>..\packages\ACBr.Net.Core.1.0.1.7-beta1\lib\net40\ACBr.Net.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -49,28 +50,53 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ACBrConsultaBase.cs">
+    <Compile Include="ACBrCaptchaException.cs" />
+    <Compile Include="ACBrComponentConsulta.cs">
       <SubType>ACBr.Net</SubType>
     </Compile>
-    <Compile Include="ACBrConsultaCNPJ.cs">
+    <Compile Include="Sintegra\ConsultaSintegraBase.cs" />
+    <Compile Include="CaptchaEventArgs.cs" />
+    <Compile Include="CEP\CEPWebService.cs" />
+    <Compile Include="CEP\CorreiosWebservice.cs" />
+    <Compile Include="CEP\ICepWebservice.cs" />
+    <Compile Include="CEP\ViaCepWebservice.cs" />
+    <Compile Include="Sintegra\ACBrConsultaSintegra.cs">
       <SubType>ACBr.Net</SubType>
     </Compile>
-    <Compile Include="ACBrConsultaCPF.cs">
+    <Compile Include="Receita\ACBrConsultaCNPJ.cs">
+      <SubType>ACBr.Net</SubType>
+    </Compile>
+    <Compile Include="Receita\ACBrConsultaCPF.cs">
+      <SubType>ACBr.Net</SubType>
+    </Compile>
+    <Compile Include="CEP\ACBrCEP.cs">
       <SubType>ACBr.Net</SubType>
     </Compile>
     <Compile Include="ACBrEmpresa.cs" />
     <Compile Include="ACBrEndereco.cs" />
-    <Compile Include="ACBrIBGE.cs">
+    <Compile Include="IBGE\ACBrIBGE.cs">
       <SubType>ACBr.Net</SubType>
     </Compile>
     <Compile Include="ACBrMunicipio.cs" />
     <Compile Include="ACBrPessoa.cs" />
+    <Compile Include="Sintegra\ConsultaSintegraMS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ConsultaUF.cs" />
+    <Compile Include="Sintegra\ConsultaSintegraSP.cs" />
+    <Compile Include="Sintegra\IConsultaSintegra.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ACBrConsultaCNPJ.png" />
-    <EmbeddedResource Include="ACBrConsultaCPF.png" />
-    <EmbeddedResource Include="ACBrIBGE.png" />
+    <EmbeddedResource Include="ACBrConsultaCNPJ.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ACBrConsultaCPF.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ACBrIBGE.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ACBrCEP.bmp" />
+    <EmbeddedResource Include="ACBrConsultaSintegra.bmp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

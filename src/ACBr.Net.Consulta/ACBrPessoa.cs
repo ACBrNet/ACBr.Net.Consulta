@@ -142,7 +142,7 @@ namespace ACBr.Net.Consulta
 			throw new ACBrException("Não foi possível obter os dados.");
 		}
 
-		public static string LerCampo(IList<string> retorno, string campo)
+		private static string LerCampo(IList<string> retorno, string campo)
 		{
 			var ret = string.Empty;
 			for (var i = 0; i < retorno.Count; i++)

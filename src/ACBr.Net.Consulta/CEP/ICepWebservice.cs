@@ -1,12 +1,12 @@
-// ***********************************************************************
+﻿// ***********************************************************************
 // Assembly         : ACBr.Net.Consulta
 // Author           : RFTD
-// Created          : 02-18-2017
+// Created          : 02-26-2017
 //
 // Last Modified By : RFTD
-// Last Modified On : 02-18-2017
+// Last Modified On : 02-26-2017
 // ***********************************************************************
-// <copyright file="ACBrMunicipio.cs" company="ACBr.Net">
+// <copyright file="ICepWebservice.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2017 Grupo ACBr.Net
 //
@@ -29,18 +29,12 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace ACBr.Net.Consulta
+namespace ACBr.Net.Consulta.CEP
 {
-    public sealed class ACBrMunicipio
+    internal interface ICepWebservice
     {
-        public int Codigo { get; internal set; }
+        ACBrEndereco[] BuscarPorCEP(string cep);
 
-        public string Nome { get; internal set; }
-
-        public ConsultaUF UF { get; internal set; }
-
-        public int CodigoUF { get; internal set; }
-
-        public decimal Area { get; internal set; }
+        ACBrEndereco[] BuscarPorLogradouro(ConsultaUF uf, string municipio, string logradouro, string tipoLogradouro = "", string bairro = "");
     }
 }
