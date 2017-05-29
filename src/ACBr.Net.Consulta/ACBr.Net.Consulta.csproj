@@ -82,6 +82,7 @@
     <Compile Include="ACBrMunicipio.cs" />
     <Compile Include="ACBrPessoa.cs" />
     <Compile Include="Sintegra\ConsultaSintegraDF.cs" />
+    <Compile Include="Sintegra\ConsultaSintegraES.cs" />
     <Compile Include="Sintegra\ConsultaSintegraGO.cs" />
     <Compile Include="Sintegra\ConsultaSintegraMS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -46,8 +46,6 @@ namespace ACBr.Net.Consulta.Sintegra
 	{
 		#region Fields
 
-		private const string URL_BASE = @"http://appasp.sefaz.go.gov.br/Sintegra/Consulta/default.asp";
-		private const string URL_CAPTCHA = @"http://appasp.sefaz.go.gov.br/Sintegra/Consulta/default.asp";
 		private const string URL_CONSULTA = @"http://appasp.sefaz.go.gov.br/Sintegra/Consulta/consultar.asp";
 
 		#endregion Fields
@@ -98,7 +96,6 @@ namespace ACBr.Net.Consulta.Sintegra
 
 			var retorno = GetHtmlResponse(request.GetResponse());
 
-			Guard.Against<ACBrCaptchaException>(retorno.Contains("O Texto digitado não confere com a Imagem"), "O Texto digitado não confere com a Imagem.");
 			Guard.Against<ACBrException>(retorno.Contains("Nenhum resultado encontrado"), $"Não existe no Cadastro do sintegra o número de CNPJ/IE informado.{Environment.NewLine}Verifique se o mesmo foi digitado corretamente.");
 			Guard.Against<ACBrException>(retorno.Contains("a. No momento não podemos atender a sua solicitação. Por favor tente mais tarde."), "Erro no site do sintegra. Tente mais tarde.");
 			Guard.Against<ACBrException>(retorno.Contains("Atenção"), "Erro ao fazer a consulta");

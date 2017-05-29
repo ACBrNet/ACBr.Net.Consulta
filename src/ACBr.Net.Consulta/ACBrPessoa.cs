@@ -121,7 +121,7 @@ namespace ACBr.Net.Consulta
 				retornoRfb.RemoveEmptyLines();
 
 				CPF = LerCampo(retornoRfb, "No do CPF:");
-				Nome = LerCampo(retornoRfb, "Nome da Pessoa Física:");
+				Nome = LerCampo(retornoRfb, "Nome:");
 				DataNascimento = LerCampo(retornoRfb, "Data de Nascimento:").ToData();
 				Situacao = LerCampo(retornoRfb, "Situação Cadastral:");
 				DataInscricao = LerCampo(retornoRfb, "Data da Inscrição:").ToData();

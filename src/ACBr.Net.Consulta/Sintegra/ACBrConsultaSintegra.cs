@@ -4,7 +4,7 @@
 // Created          : 02-20-2017
 //
 // Last Modified By : RFTD
-// Last Modified On : 02-20-2017
+// Last Modified On : 05-26-2017
 // ***********************************************************************
 // <copyright file="ACBrConsultaSintegra.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
@@ -99,6 +99,7 @@ namespace ACBr.Net.Consulta.Sintegra
 				case ConsultaUF.MS: return ConsultaSintegraMS.Instance;
 				case ConsultaUF.GO: return ConsultaSintegraGO.Instance;
 				case ConsultaUF.DF: return ConsultaSintegraDF.Instance;
+				case ConsultaUF.ES: return ConsultaSintegraES.Instance;
 				default: throw new NotImplementedException("Consulta para este estado não implementado.");
 			}
 		}
