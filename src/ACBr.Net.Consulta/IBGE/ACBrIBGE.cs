@@ -4,7 +4,7 @@
 // Created          : 02-18-2017
 //
 // Last Modified By : RFTD
-// Last Modified On : 02-18-2017
+// Last Modified On : 05-08-2017
 // ***********************************************************************
 // <copyright file="ACBrIBGE.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
@@ -33,7 +33,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using ACBr.Net.Core;
@@ -100,7 +99,7 @@ namespace ACBr.Net.Consulta.IBGE
 		{
 			Guard.Against<ArgumentException>(municipio.IsEmpty(), "Município deve ser informado");
 
-			var request = GetClient($"{CIBGE_URL}?nome={HttpUtility.UrlEncode(municipio.Trim(), Encoding.GetEncoding("ISO-8859-1"))}");
+			var request = GetClient($"{CIBGE_URL}?nome={HttpUtility.UrlEncode(municipio.Trim(), ACBrEncoding.ISO88591)}");
 			var retorno = GetHtmlResponse(request.GetResponse());
 
 			ProcessarResposta(retorno);
