@@ -51,7 +51,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ACBr.Net.Core, Version=1.0.1.7, Culture=neutral, PublicKeyToken=d3bb9130f8b775a6, processorArchitecture=MSIL">
-      <HintPath>..\packages\ACBr.Net.Core.1.0.1.7-beta1\lib\net40\ACBr.Net.Core.dll</HintPath>
+      <HintPath>..\packages\ACBr.Net.Core.1.0.1.7\lib\net40\ACBr.Net.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
