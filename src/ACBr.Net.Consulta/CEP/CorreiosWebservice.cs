@@ -77,7 +77,7 @@ namespace ACBr.Net.Consulta.CEP
                 string retorno;
 
                 // ReSharper disable once AssignNullToNotNullAttribute
-                using (var stHtml = new StreamReader(request.GetResponse().GetResponseStream(), Encoding.GetEncoding("ISO-8859-1")))
+                using (var stHtml = new StreamReader(request.GetResponse().GetResponseStream(), ACBrEncoding.ISO88591))
                     retorno = stHtml.ReadToEnd();
 
                 var doc = XDocument.Parse(retorno);

@@ -33,10 +33,20 @@ using System.Drawing;
 
 namespace ACBr.Net.Consulta.Sintegra
 {
-    internal interface IConsultaSintegra
-    {
-        Image GetCaptcha();
+	internal interface IConsultaSintegra
+	{
+		#region Properties
 
-        ACBrEmpresa Consulta(string cnpj, string ie, string captcha);
-    }
+		bool HasCaptcha { get; }
+
+		#endregion Properties
+
+		#region Methods
+
+		Image GetCaptcha();
+
+		ACBrEmpresa Consulta(string cnpj, string ie, string captcha);
+
+		#endregion Methods
+	}
 }

@@ -34,7 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ACBr.Net.Core, Version=1.0.1.7, Culture=neutral, PublicKeyToken=d3bb9130f8b775a6, processorArchitecture=MSIL">
-      <HintPath>..\packages\ACBr.Net.Core.1.0.1.7-beta1\lib\net40\ACBr.Net.Core.dll</HintPath>
+      <HintPath>..\packages\ACBr.Net.Core.1.0.1.7\lib\net40\ACBr.Net.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -54,6 +54,7 @@
     <Compile Include="ACBrComponentConsulta.cs">
       <SubType>ACBr.Net</SubType>
     </Compile>
+    <Compile Include="ConsultaUFExtensions.cs" />
     <Compile Include="Sintegra\ConsultaSintegraBase.cs" />
     <Compile Include="CaptchaEventArgs.cs" />
     <Compile Include="CEP\CEPWebService.cs" />
@@ -79,6 +80,9 @@
     </Compile>
     <Compile Include="ACBrMunicipio.cs" />
     <Compile Include="ACBrPessoa.cs" />
+    <Compile Include="Sintegra\ConsultaSintegraDF.cs" />
+    <Compile Include="Sintegra\ConsultaSintegraES.cs" />
+    <Compile Include="Sintegra\ConsultaSintegraGO.cs" />
     <Compile Include="Sintegra\ConsultaSintegraMS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ConsultaUF.cs" />

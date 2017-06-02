@@ -1,12 +1,12 @@
 // ***********************************************************************
 // Assembly         : ACBr.Net.Consulta
 // Author           : RFTD
-// Created          : 02-20-2017
+// Created          : 05-26-2017
 //
 // Last Modified By : RFTD
-// Last Modified On : 02-20-2017
+// Last Modified On : 05-26-2017
 // ***********************************************************************
-// <copyright file="ConsultaSintegraSP.cs" company="ACBr.Net">
+// <copyright file="ConsultaSintegraES.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2017 Grupo ACBr.Net
 //
@@ -32,8 +32,6 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
-using System.Net;
 using System.Text;
 using ACBr.Net.Core;
 using ACBr.Net.Core.Exceptions;
@@ -41,69 +39,38 @@ using ACBr.Net.Core.Extensions;
 
 namespace ACBr.Net.Consulta.Sintegra
 {
-	internal class ConsultaSintegraSP : ConsultaSintegraBase<ConsultaSintegraSP>
+	internal class ConsultaSintegraES : ConsultaSintegraBase<ConsultaSintegraES>
 	{
 		#region Fields
 
-		private const string URL_BASE = @"http://pfeserv1.fazenda.sp.gov.br/sintegrapfe/consultaSintegraServlet";
-		private const string URL_CAPTCHA = @"http://pfeserv1.fazenda.sp.gov.br/sintegrapfe/imageGenerator?";
-		private const string URL_CONSULTA = @"http://pfeserv1.fazenda.sp.gov.br/sintegrapfe/sintegra";
+		private const string URL_CONSULTA = @"http://www.sintegra.es.gov.br/resultado.php";
 
 		#endregion Fields
+
+		#region Constructors
+
+		public ConsultaSintegraES()
+		{
+			HasCaptcha = false;
+		}
+
+		#endregion Constructors
 
 		#region Methods
 
 		public override Image GetCaptcha()
 		{
-			var request = GetClient(URL_BASE);
-			var response = request.GetResponse();
-
-			string htmlResult;
-			using (var reader = new StreamReader(response.GetResponseStream()))
-				htmlResult = reader.ReadToEnd();
-
-			if (htmlResult.Length < 1) return null;
-
-			urlParams.Clear();
-			urlParams.Add("hidFlag", htmlResult.GetStrBetween("name=\"hidFlag\" value=\"", "\""));
-			urlParams.Add("paramBot", htmlResult.GetStrBetween("name=\"paramBot\" value=\"", "\""));
-			var imageKey = htmlResult.GetStrBetween("src=\"/sintegrapfe/imageGenerator?", "\"").Replace("amp;", string.Empty);
-			request = GetClient(URL_CAPTCHA + imageKey);
-			response = request.GetResponse();
-
-			var captchaStream = response.GetResponseStream();
-			Guard.Against<ACBrCaptchaException>(captchaStream == null, "Erro ao carregar captcha");
-
-			return Image.FromStream(captchaStream);
+			return null;
 		}
 
 		public override ACBrEmpresa Consulta(string cnpj, string ie, string captcha)
 		{
 			var request = GetClient(URL_CONSULTA);
 			request.Method = "POST";
-
 			var postData = new StringBuilder();
-
-			foreach (var param in urlParams)
-			{
-				postData.AppendFormat("{0}={1}&", param.Key, param.Value);
-			}
-
-			if (cnpj.IsEmpty())
-			{
-				postData.Append("servico=ie&");
-				postData.AppendFormat("Key={0}&", captcha);
-				postData.Append("cnpj=&");
-				postData.AppendFormat("ie={0}&", ie.IsEmpty() ? string.Empty : ie.OnlyNumbers());
-				postData.Append("botao=Consulta+por+IE");
-			}
-			else
-			{
-				postData.Append("servico=cnpj&");
-				postData.AppendFormat("Key={0}&", captcha);
-				postData.AppendFormat("cnpj={0}&", cnpj.IsEmpty() ? string.Empty : cnpj.OnlyNumbers());
-				postData.Append("botao=Consulta+por+CNPJ&ie=");
-			}
+			postData.Append("num_cnpj=" + cnpj.OnlyNumbers());
+			postData.Append("&num_ie=" + ie.OnlyNumbers());
+			postData.Append("&botao=Consulta");
 
 			var byteArray = ACBrEncoding.ISO88591.GetBytes(postData.ToString());
 			request.ContentType = "application/x-www-form-urlencoded";
@@ -115,9 +82,7 @@ namespace ACBr.Net.Consulta.Sintegra
 
 			var retorno = GetHtmlResponse(request.GetResponse());
 
-			Guard.Against<ACBrCaptchaException>(retorno.Contains("O valor da imagem esta incorreto ou expirou"), "O Texto digitado não confere com a Imagem.");
 			Guard.Against<ACBrException>(retorno.Contains("Nenhum resultado encontrado"), $"Não existe no Cadastro do sintegra o número de CNPJ/IE informado.{Environment.NewLine}Verifique se o mesmo foi digitado corretamente.");
-			Guard.Against<ACBrException>(retorno.Contains("Serviço indisponível!"), "Site do sintegra indisponível. Tente mais tarde.");
 			Guard.Against<ACBrException>(retorno.Contains("a. No momento não podemos atender a sua solicitação. Por favor tente mais tarde."), "Erro no site do sintegra. Tente mais tarde.");
 			Guard.Against<ACBrException>(retorno.Contains("Atenção"), "Erro ao fazer a consulta");
 
@@ -126,30 +91,31 @@ namespace ACBr.Net.Consulta.Sintegra
 
 		#region Private Methods
 
+		/// <summary>
+		/// Processa o retorno html e retorno o objeto tipo ACBrEmpresa com dados
+		/// </summary>
+		/// <param name="retorno"></param>
+		/// <returns>objeto tipo ACBrEmpresa</returns>
 		private static ACBrEmpresa ProcessResponse(string retorno)
 		{
 			var result = new ACBrEmpresa();
-
+			var dadosRetorno = new List<string>();
+			dadosRetorno.AddText(retorno.StripHtml());
+			dadosRetorno.RemoveEmptyLines();
 			try
 			{
-				var dadosRetorno = new List<string>();
-				dadosRetorno.AddText(WebUtility.HtmlDecode(retorno.StripHtml().Replace("&nbsp;", Environment.NewLine)));
-				dadosRetorno.RemoveEmptyLines();
-
 				result.CNPJ = LerCampo(dadosRetorno, "CNPJ:");
 				result.InscricaoEstadual = LerCampo(dadosRetorno, "Inscrição Estadual:");
-				result.RazaoSocial = LerCampo(dadosRetorno, "Razão Social:");
+				result.RazaoSocial = LerCampo(dadosRetorno, "Razão Social :");
 				result.Logradouro = LerCampo(dadosRetorno, "Logradouro:");
 				result.Numero = LerCampo(dadosRetorno, "Número:");
 				result.Complemento = LerCampo(dadosRetorno, "Complemento:");
-				result.Bairro = LerCampo(dadosRetorno, "Bairro:");
 				result.Municipio = LerCampo(dadosRetorno, "Município:");
 				result.UF = (ConsultaUF)Enum.Parse(typeof(ConsultaUF), LerCampo(dadosRetorno, "UF:").ToUpper());
 				result.CEP = LerCampo(dadosRetorno, "CEP:").FormataCEP();
-
 				result.Telefone = LerCampo(dadosRetorno, "Telefone:");
 				result.AtividadeEconomica = LerCampo(dadosRetorno, "Atividade Econômica:");
-				result.DataAbertura = LerCampo(dadosRetorno, "Data de Inicio de Atividade:").ToData();
+				result.DataInicioAtividade = LerCampo(dadosRetorno, "Data de Inicio de Atividade:").ToData();
 				result.Situacao = LerCampo(dadosRetorno, "Situação Cadastral Vigente:");
 				result.DataSituacao = LerCampo(dadosRetorno, "Data desta Situação Cadastral:").ToData();
 				result.RegimeApuracao = LerCampo(dadosRetorno, "Regime de Apuração:");
