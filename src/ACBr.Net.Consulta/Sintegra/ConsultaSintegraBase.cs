@@ -40,81 +40,81 @@ using ACBr.Net.Core.Exceptions;
 
 namespace ACBr.Net.Consulta.Sintegra
 {
-	internal abstract class ConsultaSintegraBase<T> : IConsultaSintegra where T : class, IConsultaSintegra
-	{
-		#region Field
+    internal abstract class ConsultaSintegraBase<T> : IConsultaSintegra where T : class, IConsultaSintegra
+    {
+        #region Field
 
-		protected CookieContainer cookies;
-		protected Dictionary<string, string> urlParams;
-		private static T instance;
+        protected CookieContainer cookies;
+        protected Dictionary<string, string> urlParams;
+        private static T instance;
 
-		#endregion Field
+        #endregion Field
 
-		#region Constructors
+        #region Constructors
 
-		protected ConsultaSintegraBase()
-		{
-			cookies = new CookieContainer();
-			urlParams = new Dictionary<string, string>();
-			HasCaptcha = true;
-		}
+        protected ConsultaSintegraBase()
+        {
+            cookies = new CookieContainer();
+            urlParams = new Dictionary<string, string>();
+            HasCaptcha = true;
+        }
 
-		#endregion Constructors
+        #endregion Constructors
 
-		#region Properties
+        #region Properties
 
-		public static T Instance => instance ?? (instance = Activator.CreateInstance<T>());
+        public static T Instance => instance ?? (instance = Activator.CreateInstance<T>());
 
-		public bool HasCaptcha { get; protected set; }
+        public bool HasCaptcha { get; protected set; }
 
-		#endregion Properties
+        #endregion Properties
 
-		#region Method
+        #region Method
 
-		#region Interface Methods
+        #region Interface Methods
 
-		public abstract Image GetCaptcha();
+        public abstract Image GetCaptcha();
 
-		public abstract ACBrEmpresa Consulta(string cnpj, string ie, string captcha);
+        public abstract ACBrEmpresa Consulta(string cnpj, string ie, string captcha);
 
-		#endregion Interface Methods
+        #endregion Interface Methods
 
-		#region Protected Method
+        #region Protected Method
 
-		protected HttpWebRequest GetClient(string url)
-		{
-			var webRequest = (HttpWebRequest)WebRequest.Create(url);
-			webRequest.CookieContainer = cookies;
-			webRequest.ProtocolVersion = HttpVersion.Version11;
-			webRequest.UserAgent = "Mozilla/4.0 (compatible; Synapse)";
+        protected HttpWebRequest GetClient(string url)
+        {
+            var webRequest = (HttpWebRequest)WebRequest.Create(url);
+            webRequest.CookieContainer = cookies;
+            webRequest.ProtocolVersion = HttpVersion.Version11;
+            webRequest.UserAgent = "Mozilla/4.0 (compatible; Synapse)";
 
-			webRequest.KeepAlive = true;
-			webRequest.Headers.Add(HttpRequestHeader.KeepAlive, "300");
+            webRequest.KeepAlive = true;
+            webRequest.Headers.Add(HttpRequestHeader.KeepAlive, "300");
 
-			return webRequest;
-		}
+            return webRequest;
+        }
 
-		protected string GetHtmlResponse(WebResponse response)
-		{
-			return GetHtmlResponse(response, ACBrEncoding.ISO88591);
-		}
+        protected string GetHtmlResponse(WebResponse response)
+        {
+            return GetHtmlResponse(response, ACBrEncoding.ISO88591);
+        }
 
-		protected string GetHtmlResponse(WebResponse response, Encoding enconder)
-		{
-			Guard.Against<ACBrException>(response == null, "Erro ao acessar o site.");
+        protected string GetHtmlResponse(WebResponse response, Encoding enconder)
+        {
+            Guard.Against<ACBrException>(response == null, "Erro ao acessar o site.");
 
-			string retorno;
+            string retorno;
 
-			// ReSharper disable once AssignNullToNotNullAttribute
-			// ReSharper disable once PossibleNullReferenceException
-			using (var stHtml = new StreamReader(response.GetResponseStream(), enconder))
-				retorno = stHtml.ReadToEnd();
+            // ReSharper disable once AssignNullToNotNullAttribute
+            // ReSharper disable once PossibleNullReferenceException
+            using (var stHtml = new StreamReader(response.GetResponseStream(), enconder))
+                retorno = stHtml.ReadToEnd();
 
-			return retorno;
-		}
+            return retorno;
+        }
 
-		#endregion Protected Method
+        #endregion Protected Method
 
-		#endregion Method
-	}
+        #endregion Method
+    }
 }
