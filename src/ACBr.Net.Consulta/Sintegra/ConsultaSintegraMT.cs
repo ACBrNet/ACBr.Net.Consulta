@@ -82,35 +82,25 @@ namespace ACBr.Net.Consulta.Sintegra
         public override ACBrEmpresa Consulta(string cnpj, string ie, string captcha)
         {
             var request = GetClient(URL_CONSULTA);
-            request.Method = "POST";
-            request.Referer = "https://www.sefaz.mt.gov.br/sid/consulta/infocadastral/consultar/publica";
 
-            var postData = new StringBuilder();
+            var postData = new Dictionary<string, string>();
 
             if (!cnpj.IsEmpty())
             {
-                postData.Append("opcao=2&");
-                postData.Append($"numero={cnpj.OnlyNumbers()}&");
+                postData.Add("opcao", "2");
+                postData.Add("numero", cnpj.OnlyNumbers());
             }
             else
             {
-                postData.Append("opcao=1&");
-                postData.Append($"numero={ie.OnlyNumbers()}&");
+                postData.Add("opcao", "1");
+                postData.Add("numero", ie.OnlyNumbers());
             }
 
-            postData.AppendFormat("captchaDigitado={0}&", captcha);
-            postData.Append("pagn=resultado&");
-            postData.Append("captcha=telaComCaptcha");
+            postData.Add("captchaDigitado", captcha);
+            postData.Add("pagn", "resultado");
+            postData.Add("captcha", "telaComCaptcha");
 
-            var byteArray = ACBrEncoding.ISO88591.GetBytes(postData.ToString());
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.ContentLength = byteArray.Length;
-
-            var dataStream = request.GetRequestStream();
-            dataStream.Write(byteArray, 0, byteArray.Length);
-            dataStream.Close();
-
-            var retorno = GetHtmlResponse(request.GetResponse());
+            var retorno = request.SendPost(postData);
 
             Guard.Against<ACBrCaptchaException>(retorno.Contains("Código de caracteres inválido!"), "O Texto digitado não confere com a Imagem.");
             Guard.Against<ACBrException>(retorno.Contains("Nenhum resultado encontrado"), $"Não existe no Cadastro do sintegra o número de CNPJ/IE informado.{Environment.NewLine}Verifique se o mesmo foi digitado corretamente.");

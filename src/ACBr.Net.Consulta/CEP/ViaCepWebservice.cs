@@ -53,7 +53,7 @@ namespace ACBr.Net.Consulta.CEP
 
         public ACBrEndereco[] BuscarPorCEP(string cep)
         {
-            var url = $"{VIACEP_URL}{cep.OnlyNumbers()}/xml";
+            var url = $"{VIACEP_URL}/{cep.OnlyNumbers()}/xml";
             var ret = ConsultaCEP(url);
             return ret.ToArray();
         }

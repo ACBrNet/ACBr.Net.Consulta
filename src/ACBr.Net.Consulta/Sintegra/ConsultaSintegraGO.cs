@@ -42,160 +42,152 @@ using System.Text.RegularExpressions;
 
 namespace ACBr.Net.Consulta.Sintegra
 {
-	internal class ConsultaSintegraGO : ConsultaSintegraBase<ConsultaSintegraGO>
-	{
-		#region Fields
+    internal class ConsultaSintegraGO : ConsultaSintegraBase<ConsultaSintegraGO>
+    {
+        #region Fields
 
-		private const string URL_CONSULTA = @"http://appasp.sefaz.go.gov.br/Sintegra/Consulta/consultar.asp";
+        private const string URL_CONSULTA = @"http://appasp.sefaz.go.gov.br/Sintegra/Consulta/consultar.asp";
 
-		#endregion Fields
+        #endregion Fields
 
-		#region Constructors
+        #region Constructors
 
-		public ConsultaSintegraGO()
-		{
-			HasCaptcha = false;
-		}
+        public ConsultaSintegraGO()
+        {
+            HasCaptcha = false;
+        }
 
-		#endregion Constructors
+        #endregion Constructors
 
-		#region Methods
+        #region Methods
 
-		public override Image GetCaptcha()
-		{
-			return null;
-		}
+        public override Image GetCaptcha()
+        {
+            return null;
+        }
 
-		public override ACBrEmpresa Consulta(string cnpj, string ie, string captcha)
-		{
-			var request = GetClient(URL_CONSULTA);
-			request.Method = "POST";
-			var postData = new StringBuilder();
-			if (cnpj.IsEmpty())
-			{
-				postData.Append("rTipoDoc=1");
-				postData.Append("&tDoc=" + ie.Replace(",", "."));
-				postData.Append("&tCCE=" + ie.Replace(",", "."));
-				postData.Append("&tCNPJ=&tCPF=&btCGC=Consultar&zion.SystemAction=consultarSintegra%28%29&zion.OnSubmited=&zion.FormElementPosted=zionFormID_1&zionPostMethod=&zionRichValidator=true");
-			}
-			else
-			{
-				postData.Append("rTipoDoc=2");
-				postData.Append("&tDoc=" + cnpj.Replace(",", "."));
-				postData.Append("&tCCE=&tCNPJ=" + cnpj.Replace(",", "."));
-				postData.Append("&tCPF=&btCGC=Consultar&zion.SystemAction=consultarSintegra%28%29&zion.OnSubmited=&zion.FormElementPosted=zionFormID_1&zionPostMethod=&zionRichValidator=true");
-			}
+        public override ACBrEmpresa Consulta(string cnpj, string ie, string captcha)
+        {
+            var request = GetClient(URL_CONSULTA);
 
-			var byteArray = ACBrEncoding.ISO88591.GetBytes(postData.ToString());
-			request.ContentType = "application/x-www-form-urlencoded";
-			request.ContentLength = byteArray.Length;
+            var postData = new Dictionary<string, string>();
+            if (cnpj.IsEmpty())
+            {
+                postData.Add("rTipoDoc", "1");
+                postData.Add("tDoc", ie.Replace(",", "."));
+                postData.Add("tCCE", ie.Replace(",", "."));
+                postData.Add("tCNPJ", "&tCPF=&btCGC=Consultar&zion.SystemAction=consultarSintegra%28%29&zion.OnSubmited=&zion.FormElementPosted=zionFormID_1&zionPostMethod=&zionRichValidator=true");
+            }
+            else
+            {
+                postData.Add("rTipoDoc", "2");
+                postData.Add("tDoc=", cnpj.Replace(",", "."));
+                postData.Add("tCCE=&tCNPJ", cnpj.Replace(",", "."));
+                postData.Add("tCPF", "&btCGC=Consultar&zion.SystemAction=consultarSintegra%28%29&zion.OnSubmited=&zion.FormElementPosted=zionFormID_1&zionPostMethod=&zionRichValidator=true");
+            }
 
-			var dataStream = request.GetRequestStream();
-			dataStream.Write(byteArray, 0, byteArray.Length);
-			dataStream.Close();
+            var retorno = request.SendPost(postData);
 
-			var retorno = GetHtmlResponse(request.GetResponse());
+            Guard.Against<ACBrException>(retorno.Contains("Nenhum resultado encontrado"), $"Não existe no Cadastro do sintegra o número de CNPJ/IE informado.{Environment.NewLine}Verifique se o mesmo foi digitado corretamente.");
+            Guard.Against<ACBrException>(retorno.Contains("a. No momento não podemos atender a sua solicitação. Por favor tente mais tarde."), "Erro no site do sintegra. Tente mais tarde.");
+            Guard.Against<ACBrException>(retorno.Contains("Atenção"), "Erro ao fazer a consulta");
 
-			Guard.Against<ACBrException>(retorno.Contains("Nenhum resultado encontrado"), $"Não existe no Cadastro do sintegra o número de CNPJ/IE informado.{Environment.NewLine}Verifique se o mesmo foi digitado corretamente.");
-			Guard.Against<ACBrException>(retorno.Contains("a. No momento não podemos atender a sua solicitação. Por favor tente mais tarde."), "Erro no site do sintegra. Tente mais tarde.");
-			Guard.Against<ACBrException>(retorno.Contains("Atenção"), "Erro ao fazer a consulta");
+            return ProcessResponse(retorno);
+        }
 
-			return ProcessResponse(retorno);
-		}
+        #region Private Methods
 
-		#region Private Methods
+        private static List<string> GetContents(string entrada, string regex)
+        {
+            var padrao = Regex.Matches(entrada, regex, RegexOptions.Multiline | RegexOptions.Singleline | RegexOptions.IgnoreCase);
+            return (from Match match in padrao select match.Value).ToList();
+        }
 
-		private static List<string> GetContents(string entrada, string regex)
-		{
-			var padrao = Regex.Matches(entrada, regex, RegexOptions.Multiline | RegexOptions.Singleline | RegexOptions.IgnoreCase);
-			return (from Match match in padrao select match.Value).ToList();
-		}
+        private static List<string> ProcessTableHtml(string retorno)
+        {
+            const string tableExpression = "<table.*?>(.*?)</table>";
+            const string trPattern = "<tr(.*?)</tr>";
+            const string tdPattern = "<td.*?>(.*?)</td>";
+            var dadosRetorno = new List<string>();
+            var tableContents = GetContents(retorno, tableExpression);
+            foreach (var tableContent in tableContents)
+            {
+                var trContents = GetContents(tableContent, trPattern);
+                foreach (var trContent in trContents)
+                {
+                    var tdContents = GetContents(trContent, tdPattern);
+                    foreach (var item in tdContents)
+                    {
+                        dadosRetorno.AddText(WebUtility.HtmlDecode(item.StripHtml().Replace("&nbsp;", string.Empty)).Trim());
+                        dadosRetorno.RemoveEmptyLines();
+                    }
+                }
+            }
+            return dadosRetorno;
+        }
 
-		private static List<string> ProcessTableHtml(string retorno)
-		{
-			const string tableExpression = "<table.*?>(.*?)</table>";
-			const string trPattern = "<tr(.*?)</tr>";
-			const string tdPattern = "<td.*?>(.*?)</td>";
-			var dadosRetorno = new List<string>();
-			var tableContents = GetContents(retorno, tableExpression);
-			foreach (var tableContent in tableContents)
-			{
-				var trContents = GetContents(tableContent, trPattern);
-				foreach (var trContent in trContents)
-				{
-					var tdContents = GetContents(trContent, tdPattern);
-					foreach (var item in tdContents)
-					{
-						dadosRetorno.AddText(WebUtility.HtmlDecode(item.StripHtml().Replace("&nbsp;", string.Empty)).Trim());
-						dadosRetorno.RemoveEmptyLines();
-					}
-				}
-			}
-			return dadosRetorno;
-		}
+        /// <summary>
+        /// Processa o retorno html e retorno o objeto tipo ACBrEmpresa com dados
+        /// </summary>
+        /// <param name="retorno"></param>
+        /// <returns>objeto tipo ACBrEmpresa</returns>
+        private static ACBrEmpresa ProcessResponse(string retorno)
+        {
+            var result = new ACBrEmpresa();
+            var dadosRetorno = ProcessTableHtml(retorno);
+            try
+            {
+                result.CNPJ = LerCampo(dadosRetorno, "CNPJ:");
+                result.InscricaoEstadual = LerCampo(dadosRetorno, "Inscrição Estadual - CCE :");
+                result.RazaoSocial = LerCampo(dadosRetorno, "Nome Empresarial:");
+                result.Logradouro = LerCampo(dadosRetorno, "Logradouro:");
+                result.Numero = LerCampo(dadosRetorno, "Número:");
+                result.Complemento = LerCampo(dadosRetorno, "Complemento:");
 
-		/// <summary>
-		/// Processa o retorno html e retorno o objeto tipo ACBrEmpresa com dados
-		/// </summary>
-		/// <param name="retorno"></param>
-		/// <returns>objeto tipo ACBrEmpresa</returns>
-		private static ACBrEmpresa ProcessResponse(string retorno)
-		{
-			var result = new ACBrEmpresa();
-			var dadosRetorno = ProcessTableHtml(retorno);
-			try
-			{
-				result.CNPJ = LerCampo(dadosRetorno, "CNPJ:");
-				result.InscricaoEstadual = LerCampo(dadosRetorno, "Inscrição Estadual - CCE :");
-				result.RazaoSocial = LerCampo(dadosRetorno, "Nome Empresarial:");
-				result.Logradouro = LerCampo(dadosRetorno, "Logradouro:");
-				result.Numero = LerCampo(dadosRetorno, "Número:");
-				result.Complemento = LerCampo(dadosRetorno, "Complemento:");
+                var dadosRetorno2 = new List<string>();
+                dadosRetorno2.AddText(WebUtility.HtmlDecode(retorno.StripHtml().Replace("&nbsp;", Environment.NewLine)).Trim());
+                dadosRetorno2.RemoveEmptyLines();
+                result.Bairro = LerCampo(dadosRetorno2, "Bairro:");
+                dadosRetorno2 = null;
 
-				var dadosRetorno2 = new List<string>();
-				dadosRetorno2.AddText(WebUtility.HtmlDecode(retorno.StripHtml().Replace("&nbsp;", Environment.NewLine)).Trim());
-				dadosRetorno2.RemoveEmptyLines();
-				result.Bairro = LerCampo(dadosRetorno2, "Bairro:");
-				dadosRetorno2 = null;
+                result.Municipio = LerCampo(dadosRetorno, "Município:");
+                result.UF = (ConsultaUF)Enum.Parse(typeof(ConsultaUF), LerCampo(dadosRetorno, "UF:").ToUpper());
+                result.CEP = LerCampo(dadosRetorno, "CEP:").FormataCEP();
+                result.Telefone = LerCampo(dadosRetorno, "Telefone:");
+                result.AtividadeEconomica = LerCampo(dadosRetorno, "Atividade Principal");
+                result.DataAbertura = LerCampo(dadosRetorno, "Data de Cadastramento:").ToData();
+                result.Situacao = LerCampo(dadosRetorno, "Situação Cadastral Vigente:");
+                result.DataSituacao = LerCampo(dadosRetorno, "Data desta Situação Cadastral:").ToData();
+                result.RegimeApuracao = LerCampo(dadosRetorno, "Regime de Apuração:");
+                result.DataEmitenteNFe = LerCampo(dadosRetorno, "Emitente de NFe desde:").ToData();
+            }
+            catch (Exception exception)
+            {
+                throw new ACBrException(exception, "Erro ao processar retorno.");
+            }
 
-				result.Municipio = LerCampo(dadosRetorno, "Município:");
-				result.UF = (ConsultaUF)Enum.Parse(typeof(ConsultaUF), LerCampo(dadosRetorno, "UF:").ToUpper());
-				result.CEP = LerCampo(dadosRetorno, "CEP:").FormataCEP();
-				result.Telefone = LerCampo(dadosRetorno, "Telefone:");
-				result.AtividadeEconomica = LerCampo(dadosRetorno, "Atividade Principal");
-				result.DataAbertura = LerCampo(dadosRetorno, "Data de Cadastramento:").ToData();
-				result.Situacao = LerCampo(dadosRetorno, "Situação Cadastral Vigente:");
-				result.DataSituacao = LerCampo(dadosRetorno, "Data desta Situação Cadastral:").ToData();
-				result.RegimeApuracao = LerCampo(dadosRetorno, "Regime de Apuração:");
-				result.DataEmitenteNFe = LerCampo(dadosRetorno, "Emitente de NFe desde:").ToData();
-			}
-			catch (Exception exception)
-			{
-				throw new ACBrException(exception, "Erro ao processar retorno.");
-			}
+            return result;
+        }
 
-			return result;
-		}
+        private static string LerCampo(IList<string> retorno, string campo)
+        {
+            var ret = string.Empty;
+            var log = string.Empty;
+            for (var i = 0; i < retorno.Count; i++)
+            {
+                var linha = retorno[i].Trim();
+                if (linha != campo) continue;
 
-		private static string LerCampo(IList<string> retorno, string campo)
-		{
-			var ret = string.Empty;
-			var log = string.Empty;
-			for (var i = 0; i < retorno.Count; i++)
-			{
-				var linha = retorno[i].Trim();
-				if (linha != campo) continue;
+                ret = retorno[i + 1].Trim().Replace("&nbsp;", string.Empty);
+                retorno.RemoveAt(i);
+                break;
+            }
 
-				ret = retorno[i + 1].Trim().Replace("&nbsp;", string.Empty);
-				retorno.RemoveAt(i);
-				break;
-			}
+            return ret;
+        }
 
-			return ret;
-		}
+        #endregion Private Methods
 
-		#endregion Private Methods
-
-		#endregion Methods
-	}
+        #endregion Methods
+    }
 }

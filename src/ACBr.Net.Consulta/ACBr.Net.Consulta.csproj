@@ -54,7 +54,7 @@
     <Compile Include="ACBrComponentConsulta.cs">
       <SubType>ACBr.Net</SubType>
     </Compile>
-    <Compile Include="ConsultaUFExtensions.cs" />
+    <Compile Include="ConsultaExtensions.cs" />
     <Compile Include="Sintegra\ConsultaSintegraBA.cs" />
     <Compile Include="Sintegra\ConsultaSintegraBase.cs" />
     <Compile Include="CaptchaEventArgs.cs" />
@@ -88,6 +88,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ConsultaUF.cs" />
     <Compile Include="Sintegra\ConsultaSintegraMT.cs" />
+    <Compile Include="Sintegra\ConsultaSintegraPI.cs" />
     <Compile Include="Sintegra\ConsultaSintegraSP.cs" />
     <Compile Include="Sintegra\IConsultaSintegra.cs" />
   </ItemGroup>
