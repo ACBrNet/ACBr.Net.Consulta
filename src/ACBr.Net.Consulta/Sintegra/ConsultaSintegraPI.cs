@@ -6,7 +6,7 @@
 // Last Modified By : RFTD
 // Last Modified On : 02-20-2017
 // ***********************************************************************
-// <copyright file="ConsultaSintegraSP.cs" company="ACBr.Net">
+// <copyright file="ConsultaSintegraPI.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2017 Grupo ACBr.Net
 //
@@ -33,7 +33,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Net;
 using System.Text;
 using ACBr.Net.Core;
 using ACBr.Net.Core.Exceptions;
@@ -41,13 +40,13 @@ using ACBr.Net.Core.Extensions;
 
 namespace ACBr.Net.Consulta.Sintegra
 {
-    internal class ConsultaSintegraSP : ConsultaSintegraBase<ConsultaSintegraSP>
+    internal class ConsultaSintegraPI : ConsultaSintegraBase<ConsultaSintegraPI>
     {
         #region Fields
 
-        private const string URL_BASE = @"http://pfeserv1.fazenda.sp.gov.br/sintegrapfe/consultaSintegraServlet";
-        private const string URL_CAPTCHA = @"http://pfeserv1.fazenda.sp.gov.br/sintegrapfe/imageGenerator?";
-        private const string URL_CONSULTA = @"http://pfeserv1.fazenda.sp.gov.br/sintegrapfe/sintegra";
+        private const string URL_BASE = @"http://webas.sefaz.pi.gov.br/SintegraConsultaPublica/";
+        private const string URL_CAPTCHA = @"http://webas.sefaz.pi.gov.br/SintegraConsultaPublica/views/index.jsf?primefacesDynamicContent=securityCaptcha.problem&primefaces_image=";
+        private const string URL_CONSULTA = @"http://webas.sefaz.pi.gov.br/SintegraConsultaPublica/index.jsf";
 
         #endregion Fields
 
@@ -60,19 +59,18 @@ namespace ACBr.Net.Consulta.Sintegra
 
             string htmlResult;
             using (var reader = new StreamReader(response.GetResponseStream()))
+            {
                 htmlResult = reader.ReadToEnd();
+            }
 
             if (htmlResult.Length < 1) return null;
 
-            urlParams.Clear();
-            urlParams.Add("hidFlag", htmlResult.GetStrBetween("name=\"hidFlag\" value=\"", "\""));
-            urlParams.Add("paramBot", htmlResult.GetStrBetween("name=\"paramBot\" value=\"", "\""));
-            var imageKey = htmlResult.GetStrBetween("src=\"/sintegrapfe/imageGenerator?", "\"").Replace("amp;", string.Empty);
-            request = GetClient(URL_CAPTCHA + imageKey);
+            var url = $"{URL_CAPTCHA}{htmlResult.GetStrBetween("primefaces_image=", "\"")}";
+            request = GetClient(url);
             response = request.GetResponse();
 
             var captchaStream = response.GetResponseStream();
-            Guard.Against<ACBrCaptchaException>(captchaStream == null, "Erro ao carregar captcha");
+            Guard.Against<ACBrCaptchaException>(captchaStream.IsNull(), "Erro ao carregar captcha");
 
             return Image.FromStream(captchaStream);
         }
@@ -81,28 +79,16 @@ namespace ACBr.Net.Consulta.Sintegra
         {
             var request = GetClient(URL_CONSULTA);
 
-            var postData = new Dictionary<string, string>(urlParams);
-            if (cnpj.IsEmpty())
+            var postData = new Dictionary<string, string>
             {
-                postData.Add("servico", "ie");
-                postData.Add("Key", captcha);
-                postData.Add("cnpj", "");
-                postData.Add("ie", ie.IsEmpty() ? string.Empty : ie.OnlyNumbers());
-                postData.Add("botao", "Consulta+por+IE");
-            }
-            else
-            {
-                postData.Add("servico", "cnpj");
-                postData.Add("Key", captcha);
-                postData.Add("cnpj", cnpj.IsEmpty() ? string.Empty : cnpj.OnlyNumbers());
-                postData.Add("botao", "Consulta+por+CNPJ&ie=");
-            }
+                { "cnpj", cnpj.IsEmpty() ? string.Empty : cnpj.FormataCNPJ() },
+                { "ie", ie.IsEmpty() ? string.Empty : ie.FormatarIE("MS") },
+                { "captcha", captcha }
+            };
+            var retorno = request.SendPost(postData, Encoding.UTF8);
 
-            var retorno = request.SendPost(postData);
-
-            Guard.Against<ACBrCaptchaException>(retorno.Contains("O valor da imagem esta incorreto ou expirou"), "O Texto digitado não confere com a Imagem.");
+            Guard.Against<ACBrCaptchaException>(retorno.Contains("O Texto digitado não confere com a Imagem"), "O Texto digitado não confere com a Imagem.");
             Guard.Against<ACBrException>(retorno.Contains("Nenhum resultado encontrado"), $"Não existe no Cadastro do sintegra o número de CNPJ/IE informado.{Environment.NewLine}Verifique se o mesmo foi digitado corretamente.");
-            Guard.Against<ACBrException>(retorno.Contains("Serviço indisponível!"), "Site do sintegra indisponível. Tente mais tarde.");
             Guard.Against<ACBrException>(retorno.Contains("a. No momento não podemos atender a sua solicitação. Por favor tente mais tarde."), "Erro no site do sintegra. Tente mais tarde.");
             Guard.Against<ACBrException>(retorno.Contains("Atenção"), "Erro ao fazer a consulta");
 
@@ -118,27 +104,23 @@ namespace ACBr.Net.Consulta.Sintegra
             try
             {
                 var dadosRetorno = new List<string>();
-                dadosRetorno.AddText(WebUtility.HtmlDecode(retorno.StripHtml().Replace("&nbsp;", Environment.NewLine)));
+                dadosRetorno.AddText(retorno.StripHtml());
                 dadosRetorno.RemoveEmptyLines();
 
-                result.CNPJ = LerCampo(dadosRetorno, "CNPJ:");
-                result.InscricaoEstadual = LerCampo(dadosRetorno, "Inscrição Estadual:");
-                result.RazaoSocial = LerCampo(dadosRetorno, "Razão Social:");
-                result.Logradouro = LerCampo(dadosRetorno, "Logradouro:");
-                result.Numero = LerCampo(dadosRetorno, "Número:");
-                result.Complemento = LerCampo(dadosRetorno, "Complemento:");
-                result.Bairro = LerCampo(dadosRetorno, "Bairro:");
-                result.Municipio = LerCampo(dadosRetorno, "Município:");
-                result.UF = (ConsultaUF)Enum.Parse(typeof(ConsultaUF), LerCampo(dadosRetorno, "UF:").ToUpper());
-                result.CEP = LerCampo(dadosRetorno, "CEP:").FormataCEP();
-
-                result.Telefone = LerCampo(dadosRetorno, "Telefone:");
-                result.AtividadeEconomica = LerCampo(dadosRetorno, "Atividade Econômica:");
-                result.DataAbertura = LerCampo(dadosRetorno, "Data de Inicio de Atividade:").ToData();
-                result.Situacao = LerCampo(dadosRetorno, "Situação Cadastral Vigente:");
-                result.DataSituacao = LerCampo(dadosRetorno, "Data desta Situação Cadastral:").ToData();
-                result.RegimeApuracao = LerCampo(dadosRetorno, "Regime de Apuração:");
-                result.DataEmitenteNFe = LerCampo(dadosRetorno, "Emitente de NFe desde:").ToData();
+                result.InscricaoEstadual = LerCampo(dadosRetorno, "Inscrição Estadual");
+                result.DataAbertura = LerCampo(dadosRetorno, "Data de Início da Atividade").ToData();
+                result.CNPJ = LerCampo(dadosRetorno, "CNPJ");
+                result.RazaoSocial = LerCampo(dadosRetorno, "Razão Social/Nome");
+                result.Logradouro = LerCampo(dadosRetorno, "Logradouro");
+                result.Numero = LerCampo(dadosRetorno, "Numero");
+                result.Complemento = LerCampo(dadosRetorno, "Complemento");
+                result.CEP = LerCampo(dadosRetorno, "CEP").FormataCEP();
+                result.Bairro = LerCampo(dadosRetorno, "Bairro");
+                result.Municipio = LerCampo(dadosRetorno, "Município");
+                result.UF = (ConsultaUF)Enum.Parse(typeof(ConsultaUF), LerCampo(dadosRetorno, "UF").ToUpper());
+                result.Situacao = LerCampo(dadosRetorno, "Situação Cadastral");
+                result.DataSituacao = LerCampo(dadosRetorno, "Data da Última Atualização").ToData();
+                result.MotivoSituacao = LerCampo(dadosRetorno, "Motivo da Situação");
             }
             catch (Exception exception)
             {

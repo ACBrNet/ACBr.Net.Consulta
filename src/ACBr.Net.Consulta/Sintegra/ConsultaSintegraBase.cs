@@ -94,25 +94,6 @@ namespace ACBr.Net.Consulta.Sintegra
             return webRequest;
         }
 
-        protected string GetHtmlResponse(WebResponse response)
-        {
-            return GetHtmlResponse(response, ACBrEncoding.ISO88591);
-        }
-
-        protected string GetHtmlResponse(WebResponse response, Encoding enconder)
-        {
-            Guard.Against<ACBrException>(response == null, "Erro ao acessar o site.");
-
-            string retorno;
-
-            // ReSharper disable once AssignNullToNotNullAttribute
-            // ReSharper disable once PossibleNullReferenceException
-            using (var stHtml = new StreamReader(response.GetResponseStream(), enconder))
-                retorno = stHtml.ReadToEnd();
-
-            return retorno;
-        }
-
         #endregion Protected Method
 
         #endregion Method

@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -41,145 +42,161 @@ using ACBr.Net.Core.Extensions;
 
 namespace ACBr.Net.Consulta.IBGE
 {
-	/// <summary>
-	/// Class ACBrIBGE. This class cannot be inherited.
-	/// </summary>
-	/// <seealso cref="ACBrComponentConsulta" />
-	[ToolboxBitmap(typeof(ACBrIBGE), "ACBr.Net.Consulta.ACBrIBGE.bmp")]
-	public sealed class ACBrIBGE : ACBrComponentConsulta
-	{
-		#region Fields
+    /// <summary>
+    /// Class ACBrIBGE. This class cannot be inherited.
+    /// </summary>
+    /// <seealso cref="ACBrComponentConsulta" />
+    [ToolboxBitmap(typeof(ACBrIBGE), "ACBr.Net.Consulta.ACBrIBGE.bmp")]
+    public sealed class ACBrIBGE : ACBrComponentConsulta
+    {
+        #region Fields
 
-		private const string CIBGE_URL = "http://www.ibge.gov.br/home/geociencias/areaterritorial/area.php";
+        private const string CIBGE_URL = "http://www.ibge.gov.br/home/geociencias/areaterritorial/area.php";
 
-		#endregion Fields
+        #endregion Fields
 
-		#region Events
+        #region Events
 
-		public event EventHandler<EventArgs> OnBuscaEfetuada;
+        public event EventHandler<EventArgs> OnBuscaEfetuada;
 
-		#endregion Events
+        #endregion Events
 
-		#region Properties
+        #region Properties
 
-		public List<ACBrMunicipio> Resultados { get; private set; }
+        /// <summary>
+        /// Resultado da busca
+        /// </summary>
+        public List<ACBrMunicipio> Resultados { get; private set; }
 
-		#endregion Properties
+        #endregion Properties
 
-		#region Methods
+        #region Methods
 
-		/// <summary>
-		/// Busca os dados do IBGE pelo codigo do Municipio
-		/// </summary>
-		/// <param name="codigo"></param>
-		/// <returns></returns>
-		public int BuscarPorCodigo(int codigo)
-		{
-			Guard.Against<ArgumentException>(codigo < 1, "Código do Município deve ser informado");
+        /// <summary>
+        /// Busca os dados do IBGE pelo codigo do Municipio
+        /// </summary>
+        /// <param name="codigo"></param>
+        /// <returns></returns>
+        public int BuscarPorCodigo(int codigo)
+        {
+            Guard.Against<ArgumentException>(codigo < 1, "Código do Município deve ser informado");
 
-			var request = GetClient($"{CIBGE_URL}?codigo={codigo}");
-			var retorno = GetHtmlResponse(request.GetResponse());
+            var request = GetClient($"{CIBGE_URL}?codigo={codigo}");
+            var responseStream = request.GetResponse().GetResponseStream();
+            Guard.Against<ACBrException>(responseStream.IsNull(), "Erro ao acessar o site.");
 
-			ProcessarResposta(retorno);
+            string retorno;
+            using (var stHtml = new StreamReader(responseStream, ACBrEncoding.ISO88591))
+                retorno = stHtml.ReadToEnd();
 
-			var result = Resultados.Count;
-			OnBuscaEfetuada.Raise(this, EventArgs.Empty);
-			return result;
-		}
+            ProcessarResposta(retorno);
 
-		/// <summary>
-		/// Busca os dados do IBGE pelo nome do Municipio
-		/// </summary>
-		/// <param name="municipio">The municipio.</param>
-		/// <param name="uf">The uf.</param>
-		/// <param name="exata">if set to <c>true</c> [exata].</param>
-		/// <param name="caseSentive">if set to <c>true</c> [case sentive].</param>
-		/// <returns>System.Int32.</returns>
-		public int BuscarPorNome(string municipio, ConsultaUF? uf = null, bool exata = false, bool caseSentive = false)
-		{
-			Guard.Against<ArgumentException>(municipio.IsEmpty(), "Município deve ser informado");
+            var result = Resultados.Count;
+            OnBuscaEfetuada.Raise(this, EventArgs.Empty);
+            return result;
+        }
 
-			var request = GetClient($"{CIBGE_URL}?nome={HttpUtility.UrlEncode(municipio.Trim(), ACBrEncoding.ISO88591)}");
-			var retorno = GetHtmlResponse(request.GetResponse());
+        /// <summary>
+        /// Busca os dados do IBGE pelo nome do Municipio
+        /// </summary>
+        /// <param name="municipio">The municipio.</param>
+        /// <param name="uf">The uf.</param>
+        /// <param name="exata">if set to <c>true</c> [exata].</param>
+        /// <param name="caseSentive">if set to <c>true</c> [case sentive].</param>
+        /// <returns>System.Int32.</returns>
+        public int BuscarPorNome(string municipio, ConsultaUF? uf = null, bool exata = false, bool caseSentive = false)
+        {
+            Guard.Against<ArgumentException>(municipio.IsEmpty(), "Município deve ser informado");
 
-			ProcessarResposta(retorno);
+            var request = GetClient($"{CIBGE_URL}?nome={HttpUtility.UrlEncode(municipio.Trim(), ACBrEncoding.ISO88591)}");
 
-			if (uf.HasValue)
-			{
-				Resultados.RemoveAll(x => x.UF != uf);
-			}
+            var responseStream = request.GetResponse().GetResponseStream();
+            Guard.Against<ACBrException>(responseStream.IsNull(), "Erro ao acessar o site.");
 
-			if (exata)
-			{
-				if (caseSentive)
-					Resultados.RemoveAll(x => x.Nome.ToUpper().RemoveAccent() != municipio.ToUpper().RemoveAccent());
-				else
-					Resultados.RemoveAll(x => x.Nome.RemoveAccent() != municipio.RemoveAccent());
-			}
+            string retorno;
+            using (var stHtml = new StreamReader(responseStream, ACBrEncoding.ISO88591))
+                retorno = stHtml.ReadToEnd();
 
-			var result = Resultados.Count;
-			OnBuscaEfetuada.Raise(this, EventArgs.Empty);
-			return result;
-		}
+            ProcessarResposta(retorno);
 
-		#region Private Methods
+            if (uf.HasValue)
+            {
+                Resultados.RemoveAll(x => x.UF != uf);
+            }
 
-		private void ProcessarResposta(string resposta)
-		{
-			try
-			{
-				Resultados.Clear();
+            if (exata)
+            {
+                if (caseSentive)
+                    Resultados.RemoveAll(x => x.Nome.RemoveAccent() != municipio.RemoveAccent());
+                else
+                    Resultados.RemoveAll(x => x.Nome.ToUpper().RemoveAccent() != municipio.ToUpper().RemoveAccent());
+            }
 
-				var buffer = resposta.ToLower();
-				var pos = buffer.IndexOf("<div id=\"miolo_interno\">", StringComparison.Ordinal);
-				if (pos <= 0) return;
+            var result = Resultados.Count;
+            OnBuscaEfetuada.Raise(this, EventArgs.Empty);
+            return result;
+        }
 
-				buffer = buffer.Substring(pos, buffer.Length - pos);
-				buffer = buffer.GetStrBetween("<table ", "</table>");
+        #region Private Methods
 
-				var rows = Regex.Matches(buffer, @"(?<1><TR[^>]*>\s*<td.*?</tr>)", RegexOptions.Singleline | RegexOptions.IgnoreCase)
-								.Cast<Match>()
-								.Select(t => t.Value)
-								.ToArray();
+        private void ProcessarResposta(string resposta)
+        {
+            try
+            {
+                Resultados.Clear();
 
-				if (rows.Length < 2) return;
+                var buffer = resposta.ToLower();
+                var pos = buffer.IndexOf("<div id=\"miolo_interno\">", StringComparison.Ordinal);
+                if (pos <= 0) return;
 
-				for (var i = 1; i < rows.Length; i++)
-				{
-					var columns = Regex.Matches(rows[i], @"<td[^>](.+?)<\/td>", RegexOptions.Singleline | RegexOptions.IgnoreCase)
-									   .Cast<Match>()
-									   .Select(t => t.Value.StripHtml().Replace("&nbsp;", string.Empty).Trim())
-									   .ToArray();
+                buffer = buffer.Substring(pos, buffer.Length - pos);
+                buffer = buffer.GetStrBetween("<table ", "</table>");
 
-					var municipio = new ACBrMunicipio
-					{
-						CodigoUF = columns[0].ToInt32(),
-						UF = (ConsultaUF)Enum.Parse(typeof(ConsultaUF), columns[1].ToUpper()),
-						Codigo = columns[2].ToInt32(),
-						Nome = columns[3].ToTitleCase(),
-						Area = columns[4].ToDecimal()
-					};
+                var rows = Regex.Matches(buffer, @"(?<1><TR[^>]*>\s*<td.*?</tr>)", RegexOptions.Singleline | RegexOptions.IgnoreCase)
+                                .Cast<Match>()
+                                .Select(t => t.Value)
+                                .ToArray();
 
-					Resultados.Add(municipio);
-				}
-			}
-			catch (Exception exception)
-			{
-				throw new ACBrException(exception, "Erro ao processar retorno.");
-			}
-		}
+                if (rows.Length < 2) return;
 
-		#endregion Private Methods
+                for (var i = 1; i < rows.Length; i++)
+                {
+                    var columns = Regex.Matches(rows[i], @"<td[^>](.+?)<\/td>", RegexOptions.Singleline | RegexOptions.IgnoreCase)
+                                       .Cast<Match>()
+                                       .Select(t => t.Value.StripHtml().Replace("&nbsp;", string.Empty).Trim())
+                                       .ToArray();
 
-		#region Protected Method
+                    var municipio = new ACBrMunicipio
+                    {
+                        CodigoUF = columns[0].ToInt32(),
+                        UF = (ConsultaUF)Enum.Parse(typeof(ConsultaUF), columns[1].ToUpper()),
+                        Codigo = columns[2].ToInt32(),
+                        Nome = columns[3].ToTitleCase(),
+                        Area = columns[4].ToDecimal()
+                    };
 
-		protected override void OnInitialize()
-		{
-			Resultados = new List<ACBrMunicipio>();
-		}
+                    Resultados.Add(municipio);
+                }
+            }
+            catch (Exception exception)
+            {
+                throw new ACBrException(exception, "Erro ao processar retorno.");
+            }
+        }
 
-		#endregion Protected Method
+        #endregion Private Methods
 
-		#endregion Methods
-	}
+        #region Protected Method
+
+        /// <inheritdoc />
+        protected override void OnInitialize()
+        {
+            base.OnInitialize();
+            Resultados = new List<ACBrMunicipio>();
+        }
+
+        #endregion Protected Method
+
+        #endregion Methods
+    }
 }

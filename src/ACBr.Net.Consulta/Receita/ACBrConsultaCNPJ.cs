@@ -101,7 +101,8 @@ namespace ACBr.Net.Consulta.Receita
         /// <returns>Dados da empresa.</returns>
         public ACBrEmpresa Consulta(string cnpj, string captcha = "")
         {
-            Guard.Against<ACBrException>(cnpj.IsEmpty(), "É necessário digitar o CNPJ.");
+            Guard.Against<ACBrException>(cnpj.IsEmpty(), "Necessário informar o CNPJ.");
+            Guard.Against<ACBrException>(!cnpj.IsCNPJ(), "CNPJ inválido.");
 
             if (captcha.IsEmpty() && OnGetCaptcha != null)
             {
@@ -111,27 +112,20 @@ namespace ACBr.Net.Consulta.Receita
                 captcha = e.Captcha;
             }
 
-            Guard.Against<ACBrException>(captcha.IsEmpty(), "É necessário digitar o captcha.");
+            Guard.Against<ACBrException>(captcha.IsEmpty(), "Necessário digitar o captcha.");
 
             var request = GetClient(urlBaseReceitaFederal + paginaValidacao);
-            request.Method = "POST";
 
-            var postData = new StringBuilder();
-            postData.Append("origem=comprovante&");
-            postData.AppendFormat("cnpj={0}&", cnpj.OnlyNumbers());
-            postData.AppendFormat("txtTexto_captcha_serpro_gov_br={0}&", captcha);
-            postData.Append("submit1=Consultar&");
-            postData.Append("search_type=cnpj");
+            var postData = new Dictionary<string, string>
+            {
+                {"origem", "comprovante"},
+                {"cnpj", cnpj.OnlyNumbers()},
+                {"txtTexto_captcha_serpro_gov_br", captcha},
+                {"submit1", "Consultar"},
+                {"search_type", "cnpj"}
+            };
 
-            var byteArray = Encoding.UTF8.GetBytes(postData.ToString());
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.ContentLength = byteArray.Length;
-
-            var dataStream = request.GetRequestStream();
-            dataStream.Write(byteArray, 0, byteArray.Length);
-            dataStream.Close();
-
-            var retorno = GetHtmlResponse(request.GetResponse());
+            var retorno = request.SendPost(postData);
 
             Guard.Against<ACBrCaptchaException>(retorno.Contains("Imagem com os caracteres anti robô"), "Catpcha errado.");
             Guard.Against<ACBrException>(retorno.Contains("Erro na Consulta"), "Erro na Consulta.");

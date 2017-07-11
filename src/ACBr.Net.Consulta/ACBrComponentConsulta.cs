@@ -38,64 +38,46 @@ using ACBr.Net.Core.Extensions;
 
 namespace ACBr.Net.Consulta
 {
-	/// <summary>
-	/// Classe ACBrComponentConsulta.
-	/// </summary>
-	/// <seealso cref="ACBr.Net.Core.ACBrComponent" />
-	public abstract class ACBrComponentConsulta : ACBrComponent
-	{
-		#region Field
+    /// <summary>
+    /// Classe ACBrComponentConsulta.
+    /// </summary>
+    /// <seealso cref="ACBr.Net.Core.ACBrComponent" />
+    public abstract class ACBrComponentConsulta : ACBrComponent
+    {
+        #region Field
 
-		protected CookieContainer cookies;
+        protected CookieContainer cookies;
 
-		#endregion Field
+        #endregion Field
 
-		#region Method
+        #region Method
 
-		#region Protected Method
+        #region Protected Method
 
-		protected virtual HttpWebRequest GetClient(string url)
-		{
-			var webRequest = (HttpWebRequest)WebRequest.Create(url);
-			webRequest.CookieContainer = cookies;
-			webRequest.ProtocolVersion = HttpVersion.Version11;
-			webRequest.UserAgent = "Mozilla/4.0 (compatible; Synapse)";
+        protected virtual HttpWebRequest GetClient(string url)
+        {
+            var webRequest = (HttpWebRequest)WebRequest.Create(url);
+            webRequest.CookieContainer = cookies;
+            webRequest.ProtocolVersion = HttpVersion.Version11;
+            webRequest.UserAgent = "Mozilla/4.0 (compatible; Synapse)";
 
-			webRequest.KeepAlive = true;
-			webRequest.Headers.Add(HttpRequestHeader.KeepAlive, "300");
+            webRequest.KeepAlive = true;
+            webRequest.Headers.Add(HttpRequestHeader.KeepAlive, "300");
 
-			return webRequest;
-		}
+            return webRequest;
+        }
 
-		protected virtual string GetHtmlResponse(WebResponse response)
-		{
-			return GetHtmlResponse(response, ACBrEncoding.ISO88591);
-		}
+        protected override void OnInitialize()
+        {
+            cookies = new CookieContainer();
+        }
 
-		protected virtual string GetHtmlResponse(WebResponse response, Encoding enconder)
-		{
-			Guard.Against<ACBrException>(response.IsNull(), "Erro ao acessar o site.");
+        protected override void OnDisposing()
+        {
+        }
 
-			string retorno;
+        #endregion Protected Method
 
-			// ReSharper disable once AssignNullToNotNullAttribute
-			using (var stHtml = new StreamReader(response.GetResponseStream(), enconder))
-				retorno = stHtml.ReadToEnd();
-
-			return retorno;
-		}
-
-		protected override void OnInitialize()
-		{
-			cookies = new CookieContainer();
-		}
-
-		protected override void OnDisposing()
-		{
-		}
-
-		#endregion Protected Method
-
-		#endregion Method
-	}
+        #endregion Method
+    }
 }

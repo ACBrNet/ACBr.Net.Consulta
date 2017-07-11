@@ -66,21 +66,15 @@ namespace ACBr.Net.Consulta.Sintegra
         public override ACBrEmpresa Consulta(string cnpj, string ie, string captcha)
         {
             var request = GetClient(URL_CONSULTA);
-            request.Method = "POST";
-            var postData = new StringBuilder();
-            postData.AppendFormat("txt_CNPJ={0}&", cnpj.OnlyNumbers());
-            postData.AppendFormat("txt_IE={0}&", ie.OnlyNumbers());
-            postData.Append("EstadoSelecionado=da+Bahia&SiglaEstadoSelecionado=BA");
 
-            var byteArray = ACBrEncoding.ISO88591.GetBytes(postData.ToString());
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.ContentLength = byteArray.Length;
-
-            var dataStream = request.GetRequestStream();
-            dataStream.Write(byteArray, 0, byteArray.Length);
-            dataStream.Close();
-
-            var retorno = GetHtmlResponse(request.GetResponse(), Encoding.UTF8);
+            var postData = new Dictionary<string, string>
+            {
+                { "txt_CNPJ", cnpj.OnlyNumbers() },
+                { "txt_IE", ie.OnlyNumbers() },
+                { "EstadoSelecionado", "da+Bahia" },
+                { "SiglaEstadoSelecionado", "BA" }
+            };
+            var retorno = request.SendPost(postData, Encoding.UTF8);
 
             Guard.Against<ACBrException>(retorno.Contains("Nenhum resultado encontrado"), $"Não existe no Cadastro do sintegra o número de CNPJ/IE informado.{Environment.NewLine}Verifique se o mesmo foi digitado corretamente.");
             Guard.Against<ACBrException>(retorno.Contains("a. No momento não podemos atender a sua solicitação. Por favor tente mais tarde."), "Erro no site do sintegra. Tente mais tarde.");
