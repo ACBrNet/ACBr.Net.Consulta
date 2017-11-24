@@ -54,13 +54,13 @@
     <Compile Include="ACBrComponentConsulta.cs">
       <SubType>ACBr.Net</SubType>
     </Compile>
+    <Compile Include="CEP\CepWsClass.cs" />
     <Compile Include="ConsultaExtensions.cs" />
     <Compile Include="Sintegra\ConsultaSintegraBA.cs" />
     <Compile Include="Sintegra\ConsultaSintegraBase.cs" />
     <Compile Include="CaptchaEventArgs.cs" />
-    <Compile Include="CEP\CEPWebService.cs" />
+    <Compile Include="CEP\CepWebService.cs" />
     <Compile Include="CEP\CorreiosWebservice.cs" />
-    <Compile Include="CEP\ICepWebservice.cs" />
     <Compile Include="CEP\ViaCepWebservice.cs" />
     <Compile Include="Sintegra\ACBrConsultaSintegra.cs">
       <SubType>ACBr.Net</SubType>
