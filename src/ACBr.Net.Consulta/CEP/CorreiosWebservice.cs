@@ -39,74 +39,69 @@ using ACBr.Net.Core.Extensions;
 
 namespace ACBr.Net.Consulta.CEP
 {
-    internal sealed class CorreiosWebservice : ICepWebservice
-    {
-        #region Fields
+	internal sealed class CorreiosWebservice : CepWsClass
+	{
+		#region Fields
 
-        private const string CORREIOS_URL = "https://apps.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl";
+		private const string CORREIOS_URL = "https://apps.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl";
 
-        #endregion Fields
+		#endregion Fields
 
-        #region Methods
+		#region Methods
 
-        public ACBrEndereco[] BuscarPorCEP(string cep)
-        {
-            try
-            {
-                var request = (HttpWebRequest)WebRequest.Create(CORREIOS_URL);
-                request.ProtocolVersion = HttpVersion.Version10;
-                request.UserAgent = "Mozilla/4.0 (compatible; Synapse)";
-                request.Method = "POST";
+		public override ACBrEndereco[] BuscarPorCEP(string cep)
+		{
+			try
+			{
+				var request = (HttpWebRequest)WebRequest.Create(CORREIOS_URL);
+				request.ProtocolVersion = HttpVersion.Version10;
+				request.UserAgent = "Mozilla/4.0 (compatible; Synapse)";
+				request.Method = "POST";
 
-                var postData = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" +
-                               "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" " +
-                               "xmlns:cli=\"http://cliente.bean.master.sigep.bsb.correios.com.br/\"> " +
-                               " <soapenv:Header/>" +
-                               " <soapenv:Body>" +
-                               " <cli:consultaCEP>" +
-                               " <cep>" + cep.OnlyNumbers() + "</cep>" +
-                               " </cli:consultaCEP>" +
-                               " </soapenv:Body>" +
-                               " </soapenv:Envelope>";
+				var postData = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" +
+							   "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" " +
+							   "xmlns:cli=\"http://cliente.bean.master.sigep.bsb.correios.com.br/\"> " +
+							   " <soapenv:Header/>" +
+							   " <soapenv:Body>" +
+							   " <cli:consultaCEP>" +
+							   " <cep>" + cep.OnlyNumbers() + "</cep>" +
+							   " </cli:consultaCEP>" +
+							   " </soapenv:Body>" +
+							   " </soapenv:Envelope>";
 
-                var byteArray = Encoding.UTF8.GetBytes(postData);
-                var dataStream = request.GetRequestStream();
-                dataStream.Write(byteArray, 0, byteArray.Length);
-                dataStream.Close();
+				var byteArray = Encoding.UTF8.GetBytes(postData);
+				var dataStream = request.GetRequestStream();
+				dataStream.Write(byteArray, 0, byteArray.Length);
+				dataStream.Close();
 
-                string retorno;
+				string retorno;
 
-                // ReSharper disable once AssignNullToNotNullAttribute
-                using (var stHtml = new StreamReader(request.GetResponse().GetResponseStream(), ACBrEncoding.ISO88591))
-                    retorno = stHtml.ReadToEnd();
+				// ReSharper disable once AssignNullToNotNullAttribute
+				using (var stHtml = new StreamReader(request.GetResponse().GetResponseStream(), ACBrEncoding.ISO88591))
+					retorno = stHtml.ReadToEnd();
 
-                var doc = XDocument.Parse(retorno);
-                var element = doc.ElementAnyNs("Envelope").ElementAnyNs("Body").ElementAnyNs("consultaCEPResponse").ElementAnyNs("return");
+				var doc = XDocument.Parse(retorno);
+				var element = doc.ElementAnyNs("Envelope").ElementAnyNs("Body").ElementAnyNs("consultaCEPResponse").ElementAnyNs("return");
 
-                var endereco = new ACBrEndereco();
-                endereco.CEP = element.Element("cep").GetValue<string>();
-                endereco.Bairro = element.Element("bairro").GetValue<string>();
-                endereco.Municipio = element.Element("cidade").GetValue<string>();
-                endereco.Complemento = $"{element.Element("complemento").GetValue<string>()}{Environment.NewLine}{element.Element("complemento2").GetValue<string>()}";
-                endereco.Logradouro = element.Element("end").GetValue<string>();
-                endereco.UF = element.Element("uf").GetValue<ConsultaUF>();
+				var endereco = new ACBrEndereco();
+				endereco.CEP = element.Element("cep").GetValue<string>();
+				endereco.Bairro = element.Element("bairro").GetValue<string>();
+				endereco.Municipio = element.Element("cidade").GetValue<string>();
+				endereco.Complemento = $"{element.Element("complemento").GetValue<string>()}{Environment.NewLine}{element.Element("complemento2").GetValue<string>()}";
+				endereco.Logradouro = element.Element("end").GetValue<string>();
+				endereco.UF = (ConsultaUF)Enum.Parse(typeof(ConsultaUF), element.Element("uf").GetValue<string>());
 
-                endereco.TipoLogradouro = endereco.Logradouro.Split(' ')[0];
-                endereco.Logradouro = endereco.Logradouro.SafeReplace(endereco.TipoLogradouro, string.Empty);
+				endereco.TipoLogradouro = endereco.Logradouro.Split(' ')[0];
+				endereco.Logradouro = endereco.Logradouro.SafeReplace(endereco.TipoLogradouro, string.Empty);
 
-                return new[] { endereco };
-            }
-            catch (Exception exception)
-            {
-                throw new ACBrException(exception, "Erro ao consulta CEP.");
-            }
-        }
+				return new[] { endereco };
+			}
+			catch (Exception exception)
+			{
+				throw new ACBrException(exception, "Erro ao consulta CEP.");
+			}
+		}
 
-        public ACBrEndereco[] BuscarPorLogradouro(ConsultaUF uf, string municipio, string logradouro, string tipoLogradouro = "", string bairro = "")
-        {
-            throw new NotSupportedException("Webservice dos correios não possui pesquisa por logradouro.");
-        }
-
-        #endregion Methods
-    }
+		#endregion Methods
+	}
 }

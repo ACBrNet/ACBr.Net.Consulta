@@ -77,22 +77,14 @@ namespace ACBr.Net.Consulta.Sintegra
         public override ACBrEmpresa Consulta(string cnpj, string ie, string captcha)
         {
             var request = GetClient(URL_CONSULTA);
-            request.Method = "POST";
 
-            var postData = new StringBuilder();
-            postData.AppendFormat("cnpj={0}&", cnpj.IsEmpty() ? string.Empty : cnpj.FormataCNPJ());
-            postData.AppendFormat("ie={0}&", ie.IsEmpty() ? string.Empty : ie.FormatarIE("MS"));
-            postData.AppendFormat("captcha={0}", captcha);
-
-            var byteArray = Encoding.ASCII.GetBytes(postData.ToString());
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.ContentLength = byteArray.Length;
-
-            var dataStream = request.GetRequestStream();
-            dataStream.Write(byteArray, 0, byteArray.Length);
-            dataStream.Close();
-
-            var retorno = GetHtmlResponse(request.GetResponse(), Encoding.UTF8);
+            var postData = new Dictionary<string, string>
+            {
+                { "cnpj", cnpj.IsEmpty() ? string.Empty : cnpj.FormataCNPJ() },
+                { "ie", ie.IsEmpty() ? string.Empty : ie.FormatarIE("MS") },
+                { "captcha", captcha }
+            };
+            var retorno = request.SendPost(postData, Encoding.UTF8);
 
             Guard.Against<ACBrCaptchaException>(retorno.Contains("O Texto digitado não confere com a Imagem"), "O Texto digitado não confere com a Imagem.");
             Guard.Against<ACBrException>(retorno.Contains("Nenhum resultado encontrado"), $"Não existe no Cadastro do sintegra o número de CNPJ/IE informado.{Environment.NewLine}Verifique se o mesmo foi digitado corretamente.");

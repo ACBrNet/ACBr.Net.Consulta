@@ -2,19 +2,19 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
 	<metadata>
 		<id>ACBr.Net.Consulta</id>
-		<version>1.0.0.0</version>
+		<version>1.0.1.0</version>
 		<title>ACBr.Net.Consulta</title>
 		<authors>Grupo ACBr.Net</authors>
 		<owners>Grupo ACBr.Net</owners>
 		<projectUrl>https://acbrnet.github.io</projectUrl>
 		<iconUrl>https://avatars2.githubusercontent.com/u/7342977?v=3&amp;s=200</iconUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
-		<description>Biblioteca para consulta de CNPJ, CPF e Dados do IBGE</description>
+		<description>Biblioteca para consulta de CNPJ, CPF, Dados do IBGE, CEP e Consulta ao Sintegra de alguns estados</description>
 		<copyright>Copyright © Grupo ACBr.Net 2014 - 2017</copyright>
 		<language>pt-BR</language>
-		<tags>ACBr ACBr.Net Automação Comercial IBGE CNPJ CPF</tags>
+		<tags>ACBr ACBr.Net Automação Comercial IBGE CNPJ CPF Sintegra CEP</tags>
 		<dependencies>
-			<dependency id="ACBr.Net.Core" version="1.0.1.6" />
+			<dependency id="ACBr.Net.Core" version="1.0.1.7" />
 		</dependencies>
 	</metadata>
 	<files>

@@ -39,110 +39,110 @@ using ACBr.Net.Core.Extensions;
 
 namespace ACBr.Net.Consulta.CEP
 {
-    internal sealed class ViaCepWebservice : ICepWebservice
-    {
-        #region Fields
+	internal sealed class ViaCepWebservice : CepWsClass
+	{
+		#region Fields
 
-        private const string VIACEP_URL = "https://viacep.com.br/ws";
+		private const string VIACEP_URL = "https://viacep.com.br/ws";
 
-        #endregion Fields
+		#endregion Fields
 
-        #region Methods
+		#region Methods
 
-        #region Interface Methods
+		#region Interface Methods
 
-        public ACBrEndereco[] BuscarPorCEP(string cep)
-        {
-            var url = $"{VIACEP_URL}{cep.OnlyNumbers()}/xml";
-            var ret = ConsultaCEP(url);
-            return ret.ToArray();
-        }
+		public override ACBrEndereco[] BuscarPorCEP(string cep)
+		{
+			var url = $"{VIACEP_URL}/{cep.OnlyNumbers()}/xml";
+			var ret = ConsultaCEP(url);
+			return ret.ToArray();
+		}
 
-        public ACBrEndereco[] BuscarPorLogradouro(ConsultaUF uf, string municipio, string logradouro, string tipoLogradouro = "", string bairro = "")
-        {
-            var url = $"{VIACEP_URL}/{uf}/{municipio.ToLower().ToTitleCase()}/{logradouro.ToLower().ToTitleCase()}/xml";
-            var ret = ConsultaCEP(url);
+		public override ACBrEndereco[] BuscarPorLogradouro(ConsultaUF uf, string municipio, string logradouro, string tipoLogradouro = "", string bairro = "")
+		{
+			var url = $"{VIACEP_URL}/{uf}/{municipio.ToLower().ToTitleCase()}/{logradouro.ToLower().ToTitleCase()}/xml";
+			var ret = ConsultaCEP(url);
 
-            if (!tipoLogradouro.IsEmpty())
-            {
-                ret.RemoveAll(x => !string.Equals(x.TipoLogradouro.RemoveAccent(), tipoLogradouro.RemoveAccent(), StringComparison.CurrentCultureIgnoreCase));
-            }
+			if (!tipoLogradouro.IsEmpty())
+			{
+				ret.RemoveAll(x => !string.Equals(x.TipoLogradouro.RemoveAccent(), tipoLogradouro.RemoveAccent(), StringComparison.CurrentCultureIgnoreCase));
+			}
 
-            if (!bairro.IsEmpty())
-            {
-                ret.RemoveAll(x => !string.Equals(x.Bairro.RemoveAccent(), bairro.RemoveAccent(), StringComparison.CurrentCultureIgnoreCase));
-            }
+			if (!bairro.IsEmpty())
+			{
+				ret.RemoveAll(x => !string.Equals(x.Bairro.RemoveAccent(), bairro.RemoveAccent(), StringComparison.CurrentCultureIgnoreCase));
+			}
 
-            return ret.ToArray();
-        }
+			return ret.ToArray();
+		}
 
-        #endregion Interface Methods
+		#endregion Interface Methods
 
-        #region Private Methods
+		#region Private Methods
 
-        private static List<ACBrEndereco> ConsultaCEP(string url)
-        {
-            try
-            {
-                var webRequest = (HttpWebRequest)WebRequest.Create(url);
-                webRequest.ProtocolVersion = HttpVersion.Version10;
-                webRequest.UserAgent = "Mozilla/4.0 (compatible; Synapse)";
+		private static List<ACBrEndereco> ConsultaCEP(string url)
+		{
+			try
+			{
+				var webRequest = (HttpWebRequest)WebRequest.Create(url);
+				webRequest.ProtocolVersion = HttpVersion.Version10;
+				webRequest.UserAgent = "Mozilla/4.0 (compatible; Synapse)";
 
-                webRequest.KeepAlive = true;
-                webRequest.Headers.Add(HttpRequestHeader.KeepAlive, "300");
+				webRequest.KeepAlive = true;
+				webRequest.Headers.Add(HttpRequestHeader.KeepAlive, "300");
 
-                var response = webRequest.GetResponse();
-                var xmlStream = response.GetResponseStream();
-                var doc = XDocument.Load(xmlStream);
+				var response = webRequest.GetResponse();
+				var xmlStream = response.GetResponseStream();
+				var doc = XDocument.Load(xmlStream);
 
-                var ret = new List<ACBrEndereco>();
+				var ret = new List<ACBrEndereco>();
 
-                var rootElement = doc.Element("xmlcep");
-                if (rootElement == null) return ret;
+				var rootElement = doc.Element("xmlcep");
+				if (rootElement == null) return ret;
 
-                if (rootElement.Element("enderecos") != null)
-                {
-                    var element = rootElement.Element("enderecos");
-                    if (element == null) return ret;
+				if (rootElement.Element("enderecos") != null)
+				{
+					var element = rootElement.Element("enderecos");
+					if (element == null) return ret;
 
-                    var elements = element.Elements("endereco");
-                    ret.AddRange(elements.Select(ProcessElement));
-                }
-                else
-                {
-                    var endereco = ProcessElement(rootElement);
-                    ret.Add(endereco);
-                }
+					var elements = element.Elements("endereco");
+					ret.AddRange(elements.Select(ProcessElement));
+				}
+				else
+				{
+					var endereco = ProcessElement(rootElement);
+					ret.Add(endereco);
+				}
 
-                return ret;
-            }
-            catch (Exception e)
-            {
-                throw new ACBrException(e, "Erro ao consutar CEP.");
-            }
-        }
+				return ret;
+			}
+			catch (Exception e)
+			{
+				throw new ACBrException(e, "Erro ao consutar CEP.");
+			}
+		}
 
-        private static ACBrEndereco ProcessElement(XElement element)
-        {
-            var endereco = new ACBrEndereco
-            {
-                CEP = element.ElementAnyNs("cep").GetValue<string>(),
-                Logradouro = element.ElementAnyNs("logradouro").GetValue<string>(),
-                Complemento = element.ElementAnyNs("complemento").GetValue<string>(),
-                Bairro = element.ElementAnyNs("bairro").GetValue<string>(),
-                Municipio = element.ElementAnyNs("localidade").GetValue<string>(),
-                UF = element.ElementAnyNs("uf").GetValue<ConsultaUF>(),
-                IBGEMunicipio = element.ElementAnyNs("ibge").GetValue<string>(),
-            };
+		private static ACBrEndereco ProcessElement(XElement element)
+		{
+			var endereco = new ACBrEndereco
+			{
+				CEP = element.ElementAnyNs("cep").GetValue<string>(),
+				Logradouro = element.ElementAnyNs("logradouro").GetValue<string>(),
+				Complemento = element.ElementAnyNs("complemento").GetValue<string>(),
+				Bairro = element.ElementAnyNs("bairro").GetValue<string>(),
+				Municipio = element.ElementAnyNs("localidade").GetValue<string>(),
+				UF = element.ElementAnyNs("uf").GetValue<ConsultaUF>(),
+				IBGEMunicipio = element.ElementAnyNs("ibge").GetValue<string>(),
+			};
 
-            endereco.TipoLogradouro = endereco.Logradouro.Split(' ')[0];
-            endereco.Logradouro = endereco.Logradouro.SafeReplace(endereco.TipoLogradouro, string.Empty);
+			endereco.TipoLogradouro = endereco.Logradouro.Split(' ')[0];
+			endereco.Logradouro = endereco.Logradouro.SafeReplace(endereco.TipoLogradouro, string.Empty);
 
-            return endereco;
-        }
+			return endereco;
+		}
 
-        #endregion Private Methods
+		#endregion Private Methods
 
-        #endregion Methods
-    }
+		#endregion Methods
+	}
 }

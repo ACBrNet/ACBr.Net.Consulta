@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -62,6 +63,9 @@ namespace ACBr.Net.Consulta.IBGE
 
 		#region Properties
 
+		/// <summary>
+		/// Resultado da busca
+		/// </summary>
 		public List<ACBrMunicipio> Resultados { get; private set; }
 
 		#endregion Properties
@@ -78,7 +82,12 @@ namespace ACBr.Net.Consulta.IBGE
 			Guard.Against<ArgumentException>(codigo < 1, "Código do Município deve ser informado");
 
 			var request = GetClient($"{CIBGE_URL}?codigo={codigo}");
-			var retorno = GetHtmlResponse(request.GetResponse());
+			var responseStream = request.GetResponse().GetResponseStream();
+			Guard.Against<ACBrException>(responseStream == null, "Erro ao acessar o site.");
+
+			string retorno;
+			using (var stHtml = new StreamReader(responseStream, ACBrEncoding.ISO88591))
+				retorno = stHtml.ReadToEnd();
 
 			ProcessarResposta(retorno);
 
@@ -100,7 +109,13 @@ namespace ACBr.Net.Consulta.IBGE
 			Guard.Against<ArgumentException>(municipio.IsEmpty(), "Município deve ser informado");
 
 			var request = GetClient($"{CIBGE_URL}?nome={HttpUtility.UrlEncode(municipio.Trim(), ACBrEncoding.ISO88591)}");
-			var retorno = GetHtmlResponse(request.GetResponse());
+
+			var responseStream = request.GetResponse().GetResponseStream();
+			Guard.Against<ACBrException>(responseStream.IsNull(), "Erro ao acessar o site.");
+
+			string retorno;
+			using (var stHtml = new StreamReader(responseStream, ACBrEncoding.ISO88591))
+				retorno = stHtml.ReadToEnd();
 
 			ProcessarResposta(retorno);
 
@@ -112,9 +127,9 @@ namespace ACBr.Net.Consulta.IBGE
 			if (exata)
 			{
 				if (caseSentive)
-					Resultados.RemoveAll(x => x.Nome.ToUpper().RemoveAccent() != municipio.ToUpper().RemoveAccent());
-				else
 					Resultados.RemoveAll(x => x.Nome.RemoveAccent() != municipio.RemoveAccent());
+				else
+					Resultados.RemoveAll(x => x.Nome.ToUpper().RemoveAccent() != municipio.ToUpper().RemoveAccent());
 			}
 
 			var result = Resultados.Count;
@@ -173,8 +188,10 @@ namespace ACBr.Net.Consulta.IBGE
 
 		#region Protected Method
 
+		/// <inheritdoc />
 		protected override void OnInitialize()
 		{
+			base.OnInitialize();
 			Resultados = new List<ACBrMunicipio>();
 		}
 

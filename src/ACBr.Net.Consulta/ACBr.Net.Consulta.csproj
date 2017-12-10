@@ -33,8 +33,8 @@
     <DocumentationFile>..\..\bin\Release\ACBr.Net.Consulta.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ACBr.Net.Core, Version=1.0.1.7, Culture=neutral, PublicKeyToken=d3bb9130f8b775a6, processorArchitecture=MSIL">
-      <HintPath>..\packages\ACBr.Net.Core.1.0.1.7\lib\net40\ACBr.Net.Core.dll</HintPath>
+    <Reference Include="ACBr.Net.Core, Version=1.0.1.8, Culture=neutral, PublicKeyToken=d3bb9130f8b775a6, processorArchitecture=MSIL">
+      <HintPath>..\packages\ACBr.Net.Core.1.0.1.8\lib\net40\ACBr.Net.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -54,12 +54,13 @@
     <Compile Include="ACBrComponentConsulta.cs">
       <SubType>ACBr.Net</SubType>
     </Compile>
-    <Compile Include="ConsultaUFExtensions.cs" />
+    <Compile Include="CEP\CepWsClass.cs" />
+    <Compile Include="ConsultaExtensions.cs" />
+    <Compile Include="Sintegra\ConsultaSintegraBA.cs" />
     <Compile Include="Sintegra\ConsultaSintegraBase.cs" />
     <Compile Include="CaptchaEventArgs.cs" />
-    <Compile Include="CEP\CEPWebService.cs" />
+    <Compile Include="CEP\CepWebService.cs" />
     <Compile Include="CEP\CorreiosWebservice.cs" />
-    <Compile Include="CEP\ICepWebservice.cs" />
     <Compile Include="CEP\ViaCepWebservice.cs" />
     <Compile Include="Sintegra\ACBrConsultaSintegra.cs">
       <SubType>ACBr.Net</SubType>
@@ -86,6 +87,8 @@
     <Compile Include="Sintegra\ConsultaSintegraMS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ConsultaUF.cs" />
+    <Compile Include="Sintegra\ConsultaSintegraMT.cs" />
+    <Compile Include="Sintegra\ConsultaSintegraPI.cs" />
     <Compile Include="Sintegra\ConsultaSintegraSP.cs" />
     <Compile Include="Sintegra\IConsultaSintegra.cs" />
   </ItemGroup>

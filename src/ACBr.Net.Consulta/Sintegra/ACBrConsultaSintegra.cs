@@ -37,87 +37,90 @@ using ACBr.Net.Core.Extensions;
 
 namespace ACBr.Net.Consulta.Sintegra
 {
-	/// <summary>
-	/// Class ACBrConsultaSintegra. This class cannot be inherited.
-	/// </summary>
-	/// <seealso cref="ACBrComponentConsulta" />
-	[ToolboxBitmap(typeof(ACBrConsultaSintegra), "ACBr.Net.Consulta.ACBrConsultaSintegra.bmp")]
-	public sealed class ACBrConsultaSintegra : ACBrComponent
-	{
-		#region Events
+    /// <summary>
+    /// Class ACBrConsultaSintegra. This class cannot be inherited.
+    /// </summary>
+    /// <seealso cref="ACBrComponentConsulta" />
+    [ToolboxBitmap(typeof(ACBrConsultaSintegra), "ACBr.Net.Consulta.ACBrConsultaSintegra.bmp")]
+    public sealed class ACBrConsultaSintegra : ACBrComponent
+    {
+        #region Events
 
-		public event EventHandler<CaptchaEventArgs> OnGetCaptcha;
+        public event EventHandler<CaptchaEventArgs> OnGetCaptcha;
 
-		#endregion Events
+        #endregion Events
 
-		#region Methods
+        #region Methods
 
-		/// <summary>
-		/// Gets the captcha.
-		/// </summary>
-		/// <param name="uf"></param>
-		/// <returns>Image.</returns>
-		public Image GetCaptcha(ConsultaUF uf)
-		{
-			var consultaSintegra = GetConsulta(uf);
-			return consultaSintegra.GetCaptcha();
-		}
+        /// <summary>
+        /// Gets the captcha.
+        /// </summary>
+        /// <param name="uf"></param>
+        /// <returns>Image.</returns>
+        public Image GetCaptcha(ConsultaUF uf)
+        {
+            var consultaSintegra = GetConsulta(uf);
+            return consultaSintegra.GetCaptcha();
+        }
 
-		/// <summary>
-		/// Consultas the specified CNPJ.
-		/// </summary>
-		/// <param name="uf"></param>
-		/// <param name="cnpj">The CNPJ.</param>
-		/// <param name="ie">The ie.</param>
-		/// <param name="captcha">The captcha.</param>
-		/// <returns>ACBrEmpresa.</returns>
-		public ACBrEmpresa Consulta(ConsultaUF uf, string cnpj = "", string ie = "", string captcha = "")
-		{
-			Guard.Against<ACBrException>(ie.IsEmpty() && cnpj.IsEmpty(), "É necessário digitar o CNPJ ou a Inscrição Estadual.");
+        /// <summary>
+        /// Consultas the specified CNPJ.
+        /// </summary>
+        /// <param name="uf"></param>
+        /// <param name="cnpj">The CNPJ.</param>
+        /// <param name="ie">The ie.</param>
+        /// <param name="captcha">The captcha.</param>
+        /// <returns>ACBrEmpresa.</returns>
+        public ACBrEmpresa Consulta(ConsultaUF uf, string cnpj = "", string ie = "", string captcha = "")
+        {
+            Guard.Against<ACBrException>(ie.IsEmpty() && cnpj.IsEmpty(), "É necessário informar o CNPJ ou o Número da Inscrição Estadual.");
 
-			var consultaSintegra = GetConsulta(uf);
+            var consultaSintegra = GetConsulta(uf);
 
-			if (captcha.IsEmpty() && OnGetCaptcha != null && consultaSintegra.HasCaptcha)
-			{
-				var e = new CaptchaEventArgs();
-				OnGetCaptcha.Raise(this, e);
+            if (captcha.IsEmpty() && OnGetCaptcha != null && consultaSintegra.HasCaptcha)
+            {
+                var e = new CaptchaEventArgs();
+                OnGetCaptcha.Raise(this, e);
 
-				captcha = e.Captcha;
-			}
+                captcha = e.Captcha;
+            }
 
-			Guard.Against<ACBrCaptchaException>(captcha.IsEmpty() && consultaSintegra.HasCaptcha, "O captcha não pode ser vazio.");
-			return consultaSintegra.Consulta(cnpj, ie, captcha);
-		}
+            Guard.Against<ACBrCaptchaException>(captcha.IsEmpty() && consultaSintegra.HasCaptcha, "O captcha não pode ser vazio.");
+            return consultaSintegra.Consulta(cnpj, ie, captcha);
+        }
 
-		#region Private Methods
+        #region Private Methods
 
-		private static IConsultaSintegra GetConsulta(ConsultaUF uf)
-		{
-			switch (uf)
-			{
-				case ConsultaUF.SP: return ConsultaSintegraSP.Instance;
-				case ConsultaUF.MS: return ConsultaSintegraMS.Instance;
-				case ConsultaUF.GO: return ConsultaSintegraGO.Instance;
-				case ConsultaUF.DF: return ConsultaSintegraDF.Instance;
-				case ConsultaUF.ES: return ConsultaSintegraES.Instance;
-				default: throw new NotImplementedException("Consulta para este estado não implementado.");
-			}
-		}
+        private static IConsultaSintegra GetConsulta(ConsultaUF uf)
+        {
+            switch (uf)
+            {
+                case ConsultaUF.BA: return ConsultaSintegraBA.Instance;
+                case ConsultaUF.SP: return ConsultaSintegraSP.Instance;
+                case ConsultaUF.MS: return ConsultaSintegraMS.Instance;
+                case ConsultaUF.MT: return ConsultaSintegraMT.Instance;
+                case ConsultaUF.GO: return ConsultaSintegraGO.Instance;
+                case ConsultaUF.DF: return ConsultaSintegraDF.Instance;
+                case ConsultaUF.ES: return ConsultaSintegraES.Instance;
+                case ConsultaUF.PI: return ConsultaSintegraPI.Instance;
+                default: throw new NotImplementedException("Consulta para este estado não implementado.");
+            }
+        }
 
-		#endregion Private Methods
+        #endregion Private Methods
 
-		#region Protected Methods
+        #region Protected Methods
 
-		protected override void OnInitialize()
-		{
-		}
+        protected override void OnInitialize()
+        {
+        }
 
-		protected override void OnDisposing()
-		{
-		}
+        protected override void OnDisposing()
+        {
+        }
 
-		#endregion Protected Methods
+        #endregion Protected Methods
 
-		#endregion Methods
-	}
+        #endregion Methods
+    }
 }

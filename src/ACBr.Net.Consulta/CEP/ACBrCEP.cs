@@ -141,7 +141,7 @@ namespace ACBr.Net.Consulta.CEP
 			return Resultados.Count;
 		}
 
-		private ICepWebservice GetProvider()
+		private CepWsClass GetProvider()
 		{
 			switch (WebService)
 			{

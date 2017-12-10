@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Web;
 using ACBr.Net.Core;
 using ACBr.Net.Core.Exceptions;
 using ACBr.Net.Core.Extensions;
@@ -117,17 +118,20 @@ namespace ACBr.Net.Consulta
 
 			try
 			{
-				retornoRfb.AddText(retorno.StripHtml());
+				retorno = HttpUtility.HtmlDecode(retorno);
+				retorno = retorno.StripHtml().RemoveDoubleSpaces();
+				retorno = retorno.Replace("\t", string.Empty);
+				retornoRfb.AddText(retorno);
 				retornoRfb.RemoveEmptyLines();
 
-				CPF = LerCampo(retornoRfb, "No do CPF:");
+				CPF = LerCampo(retornoRfb, "Nº do CPF:");
 				Nome = LerCampo(retornoRfb, "Nome:");
-				DataNascimento = LerCampo(retornoRfb, "Data de Nascimento:").ToData();
+				DataNascimento = LerCampo(retornoRfb, "Data Nascimento:").ToData();
 				Situacao = LerCampo(retornoRfb, "Situação Cadastral:");
-				DataInscricao = LerCampo(retornoRfb, "Data da Inscrição:").ToData();
+				DataInscricao = LerCampo(retornoRfb, "Data de Inscrição no CPF:").ToData();
+				DigitoVerificador = LerCampo(retornoRfb, "Dígito Verificador:");
 				Emissao = LerCampo(retornoRfb, "Comprovante emitido às:");
 				CodCtrlControle = LerCampo(retornoRfb, "Código de controle do comprovante:");
-				DigitoVerificador = LerCampo(retornoRfb, "Digito Verificador:");
 			}
 			catch (Exception exception)
 			{

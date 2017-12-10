@@ -1,12 +1,12 @@
 // ***********************************************************************
 // Assembly         : ACBr.Net.Consulta
 // Author           : RFTD
-// Created          : 02-20-2017
+// Created          : 07-05-2017
 //
 // Last Modified By : RFTD
-// Last Modified On : 02-20-2017
+// Last Modified On : 07-05-2017
 // ***********************************************************************
-// <copyright file="ConsultaSintegraSP.cs" company="ACBr.Net">
+// <copyright file="ConsultaSintegraMT.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2017 Grupo ACBr.Net
 //
@@ -33,21 +33,22 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Net;
+using System.Linq;
 using System.Text;
+using System.Web;
 using ACBr.Net.Core;
 using ACBr.Net.Core.Exceptions;
 using ACBr.Net.Core.Extensions;
 
 namespace ACBr.Net.Consulta.Sintegra
 {
-    internal class ConsultaSintegraSP : ConsultaSintegraBase<ConsultaSintegraSP>
+    internal class ConsultaSintegraMT : ConsultaSintegraBase<ConsultaSintegraMT>
     {
         #region Fields
 
-        private const string URL_BASE = @"http://pfeserv1.fazenda.sp.gov.br/sintegrapfe/consultaSintegraServlet";
-        private const string URL_CAPTCHA = @"http://pfeserv1.fazenda.sp.gov.br/sintegrapfe/imageGenerator?";
-        private const string URL_CONSULTA = @"http://pfeserv1.fazenda.sp.gov.br/sintegrapfe/sintegra";
+        private const string URL_BASE = @"https://www.sefaz.mt.gov.br/sid/consulta/infocadastral/consultar/publica";
+        private const string URL_CAPTCHA = @"https://www.sefaz.mt.gov.br/sid/consulta/geradorcaracteres";
+        private const string URL_CONSULTA = @"https://www.sefaz.mt.gov.br/sid/consulta/infocadastral/consultar/publica";
 
         #endregion Fields
 
@@ -56,23 +57,24 @@ namespace ACBr.Net.Consulta.Sintegra
         public override Image GetCaptcha()
         {
             var request = GetClient(URL_BASE);
+            request.Referer = "https://www.sefaz.mt.gov.br/sid/consulta/infocadastral/consultar/publica";
+
             var response = request.GetResponse();
 
             string htmlResult;
             using (var reader = new StreamReader(response.GetResponseStream()))
+            {
                 htmlResult = reader.ReadToEnd();
+            }
 
             if (htmlResult.Length < 1) return null;
 
-            urlParams.Clear();
-            urlParams.Add("hidFlag", htmlResult.GetStrBetween("name=\"hidFlag\" value=\"", "\""));
-            urlParams.Add("paramBot", htmlResult.GetStrBetween("name=\"paramBot\" value=\"", "\""));
-            var imageKey = htmlResult.GetStrBetween("src=\"/sintegrapfe/imageGenerator?", "\"").Replace("amp;", string.Empty);
-            request = GetClient(URL_CAPTCHA + imageKey);
+            var url = $"{URL_CAPTCHA}{htmlResult.GetStrBetween("geradorcaracteres", "\"")}";
+            request = GetClient(url);
             response = request.GetResponse();
 
             var captchaStream = response.GetResponseStream();
-            Guard.Against<ACBrCaptchaException>(captchaStream == null, "Erro ao carregar captcha");
+            Guard.Against<ACBrCaptchaException>(captchaStream.IsNull(), "Erro ao carregar captcha");
 
             return Image.FromStream(captchaStream);
         }
@@ -81,28 +83,27 @@ namespace ACBr.Net.Consulta.Sintegra
         {
             var request = GetClient(URL_CONSULTA);
 
-            var postData = new Dictionary<string, string>(urlParams);
-            if (cnpj.IsEmpty())
+            var postData = new Dictionary<string, string>();
+
+            if (!cnpj.IsEmpty())
             {
-                postData.Add("servico", "ie");
-                postData.Add("Key", captcha);
-                postData.Add("cnpj", "");
-                postData.Add("ie", ie.IsEmpty() ? string.Empty : ie.OnlyNumbers());
-                postData.Add("botao", "Consulta+por+IE");
+                postData.Add("opcao", "2");
+                postData.Add("numero", cnpj.OnlyNumbers());
             }
             else
             {
-                postData.Add("servico", "cnpj");
-                postData.Add("Key", captcha);
-                postData.Add("cnpj", cnpj.IsEmpty() ? string.Empty : cnpj.OnlyNumbers());
-                postData.Add("botao", "Consulta+por+CNPJ&ie=");
+                postData.Add("opcao", "1");
+                postData.Add("numero", ie.OnlyNumbers());
             }
+
+            postData.Add("captchaDigitado", captcha);
+            postData.Add("pagn", "resultado");
+            postData.Add("captcha", "telaComCaptcha");
 
             var retorno = request.SendPost(postData);
 
-            Guard.Against<ACBrCaptchaException>(retorno.Contains("O valor da imagem esta incorreto ou expirou"), "O Texto digitado não confere com a Imagem.");
+            Guard.Against<ACBrCaptchaException>(retorno.Contains("Código de caracteres inválido!"), "O Texto digitado não confere com a Imagem.");
             Guard.Against<ACBrException>(retorno.Contains("Nenhum resultado encontrado"), $"Não existe no Cadastro do sintegra o número de CNPJ/IE informado.{Environment.NewLine}Verifique se o mesmo foi digitado corretamente.");
-            Guard.Against<ACBrException>(retorno.Contains("Serviço indisponível!"), "Site do sintegra indisponível. Tente mais tarde.");
             Guard.Against<ACBrException>(retorno.Contains("a. No momento não podemos atender a sua solicitação. Por favor tente mais tarde."), "Erro no site do sintegra. Tente mais tarde.");
             Guard.Against<ACBrException>(retorno.Contains("Atenção"), "Erro ao fazer a consulta");
 
@@ -118,27 +119,54 @@ namespace ACBr.Net.Consulta.Sintegra
             try
             {
                 var dadosRetorno = new List<string>();
-                dadosRetorno.AddText(WebUtility.HtmlDecode(retorno.StripHtml().Replace("&nbsp;", Environment.NewLine)));
+                retorno = HttpUtility.HtmlDecode(retorno);
+                retorno = retorno.StripHtml();
+                dadosRetorno.AddText(retorno.Replace("&nbsp;", Environment.NewLine));
                 dadosRetorno.RemoveEmptyLines();
 
-                result.CNPJ = LerCampo(dadosRetorno, "CNPJ:");
-                result.InscricaoEstadual = LerCampo(dadosRetorno, "Inscrição Estadual:");
-                result.RazaoSocial = LerCampo(dadosRetorno, "Razão Social:");
+                result.CNPJ = LerCampo(dadosRetorno, "CPF/CNPJ:");
+                result.InscricaoEstadual = LerCampo(dadosRetorno, "Inscrição estadual:");
+                result.RazaoSocial = LerCampo(dadosRetorno, "Razão social:").Replace("amp;", string.Empty);
                 result.Logradouro = LerCampo(dadosRetorno, "Logradouro:");
                 result.Numero = LerCampo(dadosRetorno, "Número:");
                 result.Complemento = LerCampo(dadosRetorno, "Complemento:");
                 result.Bairro = LerCampo(dadosRetorno, "Bairro:");
-                result.Municipio = LerCampo(dadosRetorno, "Município:");
-                result.UF = (ConsultaUF)Enum.Parse(typeof(ConsultaUF), LerCampo(dadosRetorno, "UF:").ToUpper());
+                result.Municipio = LerCampo(dadosRetorno, "Município/UF:");
+                result.UF = (ConsultaUF)Enum.Parse(typeof(ConsultaUF), LerCampo(dadosRetorno, result.Municipio).ToUpper());
+                result.Municipio = result.Municipio.Substring(0, result.Municipio.Length - 2);
                 result.CEP = LerCampo(dadosRetorno, "CEP:").FormataCEP();
-
                 result.Telefone = LerCampo(dadosRetorno, "Telefone:");
                 result.AtividadeEconomica = LerCampo(dadosRetorno, "Atividade Econômica:");
-                result.DataAbertura = LerCampo(dadosRetorno, "Data de Inicio de Atividade:").ToData();
-                result.Situacao = LerCampo(dadosRetorno, "Situação Cadastral Vigente:");
-                result.DataSituacao = LerCampo(dadosRetorno, "Data desta Situação Cadastral:").ToData();
-                result.RegimeApuracao = LerCampo(dadosRetorno, "Regime de Apuração:");
+                result.DataAbertura = LerCampo(dadosRetorno, "Data de início no Simples Nacional:").ToData();
+                result.Situacao = LerCampo(dadosRetorno, "Situação cadastral atual:");
+                result.DataSituacao = LerCampo(dadosRetorno, "Data desta situação cadastral:").ToData();
+                result.RegimeApuracao = LerCampo(dadosRetorno, "Data desta situação cadastral:");
                 result.DataEmitenteNFe = LerCampo(dadosRetorno, "Emitente de NFe desde:").ToData();
+
+                result.CNAE1 = LerCampo(dadosRetorno, "CNAE Fiscal:");
+                var cnae = LerCampo(dadosRetorno, result.CNAE1);
+                if (cnae != "CNAE Secundário:") result.CNAE1 += $" {cnae}";
+
+                var listCnae2 = new List<string>();
+                var aux = LerCampo(dadosRetorno, "CNAE Secundário:");
+                if (!aux.IsEmpty()) listCnae2.Add(aux);
+
+                do
+                {
+                    aux = LerCampo(dadosRetorno, aux);
+                    if (aux == "Credenciado de ofício como emissor de NF-e:") break;
+
+                    if (!aux.IsEmpty() && char.IsDigit(aux, 0))
+                    {
+                        listCnae2.Add(aux);
+                    }
+                    else
+                    {
+                        listCnae2[listCnae2.Count - 1] += $" {aux}";
+                    }
+                } while (!aux.IsEmpty());
+
+                result.CNAE2 = listCnae2.ToArray();
             }
             catch (Exception exception)
             {
@@ -161,7 +189,7 @@ namespace ACBr.Net.Consulta.Sintegra
                 break;
             }
 
-            return ret;
+            return ret.RemoveDoubleSpaces();
         }
 
         #endregion Private Methods

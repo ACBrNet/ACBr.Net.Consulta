@@ -1,12 +1,12 @@
 ﻿// ***********************************************************************
 // Assembly         : ACBr.Net.Consulta
 // Author           : RFTD
-// Created          : 02-26-2017
+// Created          : 02-21-2017
 //
 // Last Modified By : RFTD
-// Last Modified On : 02-26-2017
+// Last Modified On : 02-21-2017
 // ***********************************************************************
-// <copyright file="ICepWebservice.cs" company="ACBr.Net">
+// <copyright file="CepWsClass.cs" company="ACBr.Net">
 //		        		   The MIT License (MIT)
 //	     		    Copyright (c) 2014 - 2017 Grupo ACBr.Net
 //
@@ -29,12 +29,21 @@
 // <summary></summary>
 // ***********************************************************************
 
+using System;
+
 namespace ACBr.Net.Consulta.CEP
 {
-    internal interface ICepWebservice
-    {
-        ACBrEndereco[] BuscarPorCEP(string cep);
+	internal abstract class CepWsClass
+	{
+		public virtual ACBrEndereco[] BuscarPorCEP(string cep)
+		{
+			throw new NotSupportedException("Este provedor não possui pesquisa por CEP.");
+		}
 
-        ACBrEndereco[] BuscarPorLogradouro(ConsultaUF uf, string municipio, string logradouro, string tipoLogradouro = "", string bairro = "");
-    }
+		public virtual ACBrEndereco[] BuscarPorLogradouro(ConsultaUF uf, string municipio, string logradouro, string tipoLogradouro = "",
+			string bairro = "")
+		{
+			throw new NotSupportedException("Este provedor não possui pesquisa por logradouro.");
+		}
+	}
 }
